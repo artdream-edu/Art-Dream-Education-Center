@@ -26,6 +26,7 @@ export interface SiteConfig {
   primaryColor: string;
   logoName: string;
   aboutText: string;
+  aboutImageUrl: string;
 }
 
 export type ViewMode = 'home' | 'admin';

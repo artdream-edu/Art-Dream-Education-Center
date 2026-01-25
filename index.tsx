@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 
 // --- [TYPES] ---
@@ -23,6 +23,7 @@ interface SiteConfig {
   primaryColor: string;
   logoName: string;
   aboutText: string;
+  aboutImageUrl: string;
 }
 
 // --- [INITIAL DATA] ---
@@ -31,7 +32,8 @@ const INITIAL_CONFIG: SiteConfig = {
   heroSubtitle: "예술꿈학교는 '문화+예술+교육'을 통해 모든 존재의 고유한 가치를 발견하고 조화롭게 살아가는 것에 대해 함께 고민하며 아름다운 공존을 꿈꾸는 곳입니다.",
   primaryColor: '#8B5CF6',
   logoName: '예술꿈학교',
-  aboutText: "모든 사람은 태어날 때부터 자신만의 빛깔을 지닌 고유한 예술가입니다. 예술은 단순히 정답을 암기하는 것이 아니라, 스스로 세상에 질문을 던지며 내면의 목소리를 발견해 나가는 숭고한 과정입니다.\n\n예술꿈학교는 정형화된 교육의 틀을 깨고, 개인의 예술적 감각이 배움의 동력이 되는 경이로운 순간을 설계합니다. 우리는 모든 이가 자유로운 표현의 주체가 되어 마음껏 상상하고 경험하며, 예술 통해 삶의 깊이를 더해가는 '성장의 놀이터'를 꿈꿉니다."
+  aboutText: "모든 사람은 태어날 때부터 자신만의 빛깔을 지닌 고유한 예술가입니다. 예술은 단순히 정답을 암기하는 것이 아니라, 스스로 세상에 질문을 던지며 내면의 목소리를 발견해 나가는 숭고한 과정입니다.\n\n예술꿈학교는 정형화된 교육의 틀을 깨고, 개인의 예술적 감각이 배움의 동력이 되는 경이로운 순간을 설계합니다. 우리는 모든 이가 자유로운 표현의 주체가 되어 마음껏 상상하고 경험하며, 예술 통해 삶의 깊이를 더해가는 '성장의 놀이터'를 꿈꿉니다.",
+  aboutImageUrl: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=1000'
 };
 
 const INITIAL_PROGRAMS: Program[] = [
@@ -51,7 +53,17 @@ const INITIAL_HISTORY: HistoryItem[] = [
   { id: 'h2013', year: '2013', event: '• 예술꿈학교 설립 (2013.12.02)\n• 예술꿈학교 고유번호증 발급' }
 ];
 
-// --- [SUB-COMPONENTS: DEFINED OUTSIDE TO PREVENT RE-RENDERING BUGS] ---
+// --- [HELPERS] ---
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = error => reject(error);
+  });
+};
+
+// --- [SUB-COMPONENTS] ---
 
 const Navbar = ({ config, setViewMode, viewMode }: { config: SiteConfig, setViewMode: (m: 'home' | 'admin') => void, viewMode: string }) => (
   <nav className="fixed top-0 left-0 right-0 z-50 glass h-20 flex items-center justify-between px-6 md:px-12">
@@ -156,7 +168,7 @@ const HomeView = ({ config, programs, history }: { config: SiteConfig, programs:
         </div>
         <div className="relative">
           <div className="aspect-[4/5] rounded-3xl overflow-hidden border border-white/5 shadow-2xl bg-neutral-900">
-            <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=1000" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" alt="예술 교육" />
+            <img src={config.aboutImageUrl} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" alt="예술 교육" />
           </div>
           <div className="absolute -bottom-6 -left-6 glass p-6 rounded-2xl max-w-xs border-l-4" style={{ borderColor: config.primaryColor }}>
             <p className="text-sm italic mb-2">"연극은 교육과 예술의 교차점에 존재한다."</p>
@@ -227,6 +239,23 @@ const HomeView = ({ config, programs, history }: { config: SiteConfig, programs:
 
 const AdminView = ({ config, setConfig, programs, setPrograms, history, setHistory, setViewMode }: { config: SiteConfig, setConfig: any, programs: Program[], setPrograms: any, history: HistoryItem[], setHistory: any, setViewMode: any }) => {
   const [tab, setTab] = useState<'info' | 'history' | 'programs'>('info');
+  const aboutFileRef = useRef<HTMLInputElement>(null);
+  const progFileRefs = useRef<{[key: string]: HTMLInputElement | null}>({});
+
+  const handleAboutImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const base64 = await fileToBase64(e.target.files[0]);
+      setConfig({...config, aboutImageUrl: base64});
+    }
+  };
+
+  const handleProgImageUpload = async (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const base64 = await fileToBase64(e.target.files[0]);
+      const newProgs = programs.map(p => p.id === id ? {...p, imageUrl: base64} : p);
+      setPrograms(newProgs);
+    }
+  };
 
   return (
     <div className="min-h-screen pt-32 px-6 max-w-4xl mx-auto pb-32">
@@ -244,6 +273,28 @@ const AdminView = ({ config, setConfig, programs, setPrograms, history, setHisto
           <div className="space-y-6">
             <div><label className="text-[10px] font-black uppercase text-gray-600 mb-2 block tracking-widest">Site Title</label><input className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3" value={config.heroTitle} onChange={e => setConfig({...config, heroTitle: e.target.value})} /></div>
             <div><label className="text-[10px] font-black uppercase text-gray-600 mb-2 block tracking-widest">About Philosophy</label><textarea className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 h-40" value={config.aboutText} onChange={e => setConfig({...config, aboutText: e.target.value})} /></div>
+            <div>
+              <label className="text-[10px] font-black uppercase text-gray-600 mb-2 block tracking-widest">About Section Image</label>
+              <div className="flex flex-col gap-4">
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  className="hidden" 
+                  ref={aboutFileRef}
+                  onChange={handleAboutImageUpload}
+                />
+                <button 
+                  type="button"
+                  onClick={() => aboutFileRef.current?.click()}
+                  className="px-6 py-3 rounded-xl border border-white/10 text-xs font-bold bg-white/5 hover:bg-white/10 transition-all"
+                >
+                  이미지 파일 업로드
+                </button>
+                <div className="aspect-video rounded-xl overflow-hidden border border-white/10 max-w-sm">
+                  <img src={config.aboutImageUrl} className="w-full h-full object-cover" alt="Preview" />
+                </div>
+              </div>
+            </div>
           </div>
         )}
         {tab === 'history' && (
@@ -261,10 +312,29 @@ const AdminView = ({ config, setConfig, programs, setPrograms, history, setHisto
         {tab === 'programs' && (
           <div className="space-y-4">
             {programs.map((p, i) => (
-              <div key={p.id} className="p-6 bg-white/5 rounded-3xl space-y-3">
-                <input className="bg-transparent font-bold text-lg w-full outline-none" value={p.title} onChange={e => { let n = [...programs]; n[i].title = e.target.value; setPrograms(n); }} />
-                <input className="bg-transparent text-[10px] font-black uppercase text-purple-400 w-full outline-none" value={p.category} onChange={e => { let n = [...programs]; n[i].category = e.target.value; setPrograms(n); }} />
-                <textarea className="bg-transparent text-sm text-gray-500 w-full h-24 outline-none" value={p.description} onChange={e => { let n = [...programs]; n[i].description = e.target.value; setPrograms(n); }} />
+              <div key={p.id} className="p-6 bg-white/5 rounded-3xl space-y-4">
+                <div className="flex gap-4 items-start">
+                  <div className="relative group cursor-pointer" onClick={() => progFileRefs.current[p.id]?.click()}>
+                    <div className="w-24 h-24 rounded-2xl overflow-hidden border border-white/10 flex-shrink-0">
+                      <img src={p.imageUrl} className="w-full h-full object-cover" alt={p.title} />
+                    </div>
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center text-[8px] font-black uppercase text-white transition-all rounded-2xl">
+                      Upload
+                    </div>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="hidden"
+                      ref={el => progFileRefs.current[p.id] = el}
+                      onChange={(e) => handleProgImageUpload(p.id, e)}
+                    />
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <input className="bg-transparent font-bold text-lg w-full outline-none" placeholder="Title" value={p.title} onChange={e => { let n = [...programs]; n[i].title = e.target.value; setPrograms(n); }} />
+                    <input className="bg-transparent text-[10px] font-black uppercase text-purple-400 w-full outline-none" placeholder="Category" value={p.category} onChange={e => { let n = [...programs]; n[i].category = e.target.value; setPrograms(n); }} />
+                  </div>
+                </div>
+                <textarea className="bg-transparent text-sm text-gray-500 w-full h-24 outline-none border border-white/5 rounded-xl p-3" placeholder="Description" value={p.description} onChange={e => { let n = [...programs]; n[i].description = e.target.value; setPrograms(n); }} />
               </div>
             ))}
           </div>
