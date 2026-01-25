@@ -145,22 +145,43 @@ const App: React.FC = () => {
   const [config, setConfig] = useState<SiteConfig>(INITIAL_CONFIG);
 
   useEffect(() => {
-    const savedPrograms = localStorage.getItem('art_programs');
-    const savedNotices = localStorage.getItem('art_notices');
-    const savedHistory = localStorage.getItem('art_history');
-    const savedConfig = localStorage.getItem('art_config');
+    try {
+      const savedPrograms = localStorage.getItem('art_programs');
+      const savedNotices = localStorage.getItem('art_notices');
+      const savedHistory = localStorage.getItem('art_history');
+      const savedConfig = localStorage.getItem('art_config');
 
-    if (savedPrograms) setPrograms(JSON.parse(savedPrograms));
-    if (savedNotices) setNotices(JSON.parse(savedNotices));
-    if (savedHistory) setHistory(JSON.parse(savedHistory));
-    if (savedConfig) setConfig(JSON.parse(savedConfig));
+      if (savedPrograms) {
+        const parsed = JSON.parse(savedPrograms);
+        if (Array.isArray(parsed)) setPrograms(parsed);
+      }
+      if (savedNotices) {
+        const parsed = JSON.parse(savedNotices);
+        if (Array.isArray(parsed)) setNotices(parsed);
+      }
+      if (savedHistory) {
+        const parsed = JSON.parse(savedHistory);
+        if (Array.isArray(parsed)) setHistory(parsed);
+      }
+      if (savedConfig) {
+        const parsed = JSON.parse(savedConfig);
+        if (typeof parsed === 'object' && parsed !== null) setConfig(parsed);
+      }
+    } catch (e) {
+      console.error("Failed to load data from localStorage:", e);
+      // Fallback to initial values if parsing fails
+    }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('art_programs', JSON.stringify(programs));
-    localStorage.setItem('art_notices', JSON.stringify(notices));
-    localStorage.setItem('art_history', JSON.stringify(history));
-    localStorage.setItem('art_config', JSON.stringify(config));
+    try {
+      localStorage.setItem('art_programs', JSON.stringify(programs));
+      localStorage.setItem('art_notices', JSON.stringify(notices));
+      localStorage.setItem('art_history', JSON.stringify(history));
+      localStorage.setItem('art_config', JSON.stringify(config));
+    } catch (e) {
+      console.error("Failed to save data to localStorage:", e);
+    }
   }, [programs, notices, history, config]);
 
   return (
