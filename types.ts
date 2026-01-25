@@ -33,6 +33,7 @@ export interface SiteConfig {
   aboutImagePosition?: string;
   heroImageUrl?: string;
   heroImagePosition?: string;
+  adminPassword?: string;
 }
 
 export type ViewMode = 'home' | 'admin';

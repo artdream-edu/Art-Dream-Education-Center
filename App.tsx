@@ -48,7 +48,8 @@ const INITIAL_CONFIG: SiteConfig = {
   aboutImageUrl: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=1000',
   aboutImagePosition: 'center',
   heroImageUrl: '',
-  heroImagePosition: 'center'
+  heroImagePosition: 'center',
+  adminPassword: '000000'
 };
 
 const App: React.FC = () => {
@@ -70,7 +71,11 @@ const App: React.FC = () => {
     const savedHistory = localStorage.getItem('art_history');
 
     if (savedPrograms) setPrograms(JSON.parse(savedPrograms));
-    if (savedConfig) setConfig(JSON.parse(savedConfig));
+    if (savedConfig) {
+      const parsedConfig = JSON.parse(savedConfig);
+      // 기존 저장된 데이터에 비밀번호가 없는 경우를 대비해 병합
+      setConfig({ ...INITIAL_CONFIG, ...parsedConfig });
+    }
     if (savedHistory) setHistory(JSON.parse(savedHistory));
   }, []);
 

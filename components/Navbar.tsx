@@ -18,7 +18,9 @@ const Navbar: React.FC<NavbarProps> = ({ config, viewMode, setViewMode, isAdminM
 
     // 관리자 모드 진입 시 비밀번호 확인
     const password = window.prompt('관리자 비밀번호를 입력해주세요.');
-    if (password === 'artdream77') { // 임시 비밀번호 설정
+    const correctPassword = config.adminPassword || '000000';
+    
+    if (password === correctPassword) {
       setViewMode('admin');
     } else if (password !== null) {
       alert('비밀번호가 올바르지 않습니다.');

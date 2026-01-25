@@ -122,6 +122,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <label className="block text-[10px] font-black uppercase tracking-widest text-purple-500 mb-2">Identity (단체명)</label>
                     <input type="text" value={config.logoName} onChange={(e) => updateConfig('logoName', e.target.value)} className="w-full bg-transparent text-xl font-bold outline-none placeholder:text-gray-700" />
                   </div>
+                  <div className="p-2 border-b border-white/10 pb-4">
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-purple-500 mb-2">Admin Password (관리자 비밀번호)</label>
+                    <input type="password" value={config.adminPassword || ''} onChange={(e) => updateConfig('adminPassword', e.target.value)} className="w-full bg-transparent text-xl font-bold outline-none placeholder:text-gray-700" placeholder="비밀번호 설정" />
+                    <p className="text-[10px] text-gray-500 mt-2 uppercase tracking-tighter">관리자 모드 진입 시 사용되는 비밀번호입니다.</p>
+                  </div>
                   <ImageControl label="상단 내비게이션 로고 이미지" imageUrl={config.logoImageUrl} positionValue={config.logoImagePosition} onImageClick={() => fileRefs.logo.current?.click()} onPositionChange={(val: any) => updateConfig('logoImagePosition', val)} aspect="aspect-square" />
                   <input type="file" ref={fileRefs.logo} className="hidden" accept="image/*" onChange={(e) => handleImageUpload('logoImageUrl', e)} />
                 </div>
