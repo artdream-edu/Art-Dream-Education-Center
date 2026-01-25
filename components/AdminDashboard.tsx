@@ -51,6 +51,25 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     setConfig({ ...config, [key]: value });
   };
 
+  const moveHistoryItem = (index: number, direction: 'up' | 'down') => {
+    const newHistory = [...history];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    
+    if (targetIndex >= 0 && targetIndex < newHistory.length) {
+      [newHistory[index], newHistory[targetIndex]] = [newHistory[targetIndex], newHistory[index]];
+      setHistory(newHistory);
+    }
+  };
+
+  const sortHistoryByYear = () => {
+    const sorted = [...history].sort((a, b) => {
+      const yearA = parseInt(a.year) || 0;
+      const yearB = parseInt(b.year) || 0;
+      return yearB - yearA; // 내림차순 (최신순)
+    });
+    setHistory(sorted);
+  };
+
   const POSITION_OPTIONS = [
     { label: 'Center (중앙)', value: 'center' },
     { label: 'Top (상단)', value: 'top' },
@@ -201,17 +220,79 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
           {activeTab === 'history' && (
             <div className="space-y-6">
-              <div className="flex justify-between items-center mb-8">
-                <h3 className="text-xl font-black uppercase tracking-widest">연혁 관리</h3>
-                <button onClick={() => setHistory([{id: Date.now().toString(), year: '2025', event: ''}, ...history])} className="px-8 py-3 rounded-full bg-purple-600 text-[10px] font-black uppercase tracking-widest">+ 추가</button>
-              </div>
-              {history.map((h, i) => (
-                <div key={h.id} className="flex gap-8 p-8 bg-white/5 rounded-3xl border border-white/5 group hover:border-white/20 transition-all">
-                  <input className="bg-transparent font-black text-4xl w-24 outline-none border-b border-white/10 group-focus-within:border-purple-500 transition-all" value={h.year} onChange={e => { let n = [...history]; n[i].year = e.target.value; setHistory(n); }} />
-                  <textarea className="bg-transparent text-gray-300 flex-1 h-32 outline-none resize-none leading-relaxed" placeholder="내용..." value={h.event} onChange={e => { let n = [...history]; n[i].event = e.target.value; setHistory(n); }} />
-                  <button type="button" onClick={() => setHistory(history.filter(it => it.id !== h.id))} className="text-red-500 text-[10px] font-black uppercase self-start mt-4 opacity-50 hover:opacity-100">삭제</button>
+              <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-8">
+                <div>
+                  <h3 className="text-xl font-black uppercase tracking-widest">연혁 관리</h3>
+                  <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-widest">항목을 추가하고 순서를 자유롭게 조정하세요.</p>
                 </div>
-              ))}
+                <div className="flex gap-2">
+                  <button 
+                    onClick={sortHistoryByYear} 
+                    className="px-6 py-3 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest hover:bg-white/5 transition-all"
+                  >
+                    연도순 정렬 (최신순)
+                  </button>
+                  <button 
+                    onClick={() => setHistory([{id: Date.now().toString(), year: new Date().getFullYear().toString(), event: ''}, ...history])} 
+                    className="px-8 py-3 rounded-full bg-purple-600 text-[10px] font-black uppercase tracking-widest shadow-xl shadow-purple-900/20"
+                  >
+                    + 항목 추가
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {history.map((h, i) => (
+                  <div key={h.id} className="flex flex-col md:flex-row gap-6 p-8 bg-white/5 rounded-3xl border border-white/5 group hover:border-white/10 transition-all relative">
+                    <div className="flex md:flex-col gap-2 shrink-0">
+                      <input 
+                        className="bg-transparent font-black text-4xl w-24 outline-none border-b border-white/10 group-focus-within:border-purple-500 transition-all" 
+                        value={h.year} 
+                        onChange={e => { let n = [...history]; n[i].year = e.target.value; setHistory(n); }} 
+                      />
+                      <div className="flex flex-row md:flex-col gap-1 mt-2">
+                        <button 
+                          onClick={() => moveHistoryItem(i, 'up')}
+                          disabled={i === 0}
+                          className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" /></svg>
+                        </button>
+                        <button 
+                          onClick={() => moveHistoryItem(i, 'down')}
+                          disabled={i === history.length - 1}
+                          className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <textarea 
+                      className="bg-transparent text-gray-300 flex-1 min-h-[80px] outline-none resize-none leading-relaxed border-b border-transparent focus:border-white/10 transition-all" 
+                      placeholder="연혁 내용을 입력하세요..." 
+                      value={h.event} 
+                      onChange={e => { let n = [...history]; n[i].event = e.target.value; setHistory(n); }} 
+                    />
+
+                    <div className="absolute top-6 right-8">
+                      <button 
+                        type="button" 
+                        onClick={() => setHistory(history.filter(it => it.id !== h.id))} 
+                        className="text-red-500/40 hover:text-red-500 text-[10px] font-black uppercase transition-all"
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                
+                {history.length === 0 && (
+                  <div className="py-20 text-center border-2 border-dashed border-white/5 rounded-[2rem]">
+                    <p className="text-gray-600 text-sm font-medium uppercase tracking-widest">등록된 연혁이 없습니다. 항목을 추가해 보세요.</p>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
