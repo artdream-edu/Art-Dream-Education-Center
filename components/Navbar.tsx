@@ -6,9 +6,25 @@ interface NavbarProps {
   config: SiteConfig;
   viewMode: ViewMode;
   setViewMode: (mode: ViewMode) => void;
+  isAdminModeEnabled: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ config, viewMode, setViewMode }) => {
+const Navbar: React.FC<NavbarProps> = ({ config, viewMode, setViewMode, isAdminModeEnabled }) => {
+  const handleAdminClick = () => {
+    if (viewMode === 'admin') {
+      setViewMode('home');
+      return;
+    }
+
+    // 관리자 모드 진입 시 비밀번호 확인
+    const password = window.prompt('관리자 비밀번호를 입력해주세요.');
+    if (password === 'artdream77') { // 임시 비밀번호 설정
+      setViewMode('admin');
+    } else if (password !== null) {
+      alert('비밀번호가 올바르지 않습니다.');
+    }
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass h-20 flex items-center justify-between px-6 md:px-12">
       <div 
@@ -38,12 +54,14 @@ const Navbar: React.FC<NavbarProps> = ({ config, viewMode, setViewMode }) => {
           <a href="#request" className="hover:text-white transition-colors">의뢰하기</a>
         </div>
         
-        <button 
-          onClick={() => setViewMode(viewMode === 'admin' ? 'home' : 'admin')}
-          className="px-5 py-2 rounded-full border border-white/20 text-xs font-bold hover:bg-white hover:text-black transition-all"
-        >
-          {viewMode === 'admin' ? '사이트 보기' : '관리자'}
-        </button>
+        {isAdminModeEnabled && (
+          <button 
+            onClick={handleAdminClick}
+            className="px-5 py-2 rounded-full border border-white/20 text-xs font-bold hover:bg-white hover:text-black transition-all"
+          >
+            {viewMode === 'admin' ? '사이트 보기' : '관리자'}
+          </button>
+        )}
       </div>
     </nav>
   );

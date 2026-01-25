@@ -5,11 +5,10 @@ import Hero from './components/Hero';
 import Programs from './components/Programs';
 import About from './components/About';
 import HistorySection from './components/HistorySection';
-import NoticeSection from './components/NoticeSection';
 import RequestForm from './components/RequestForm';
 import Footer from './components/Footer';
 import AdminDashboard from './components/AdminDashboard';
-import { Program, Notice, SiteConfig, ViewMode, HistoryItem } from './types';
+import { Program, SiteConfig, ViewMode, HistoryItem } from './types';
 
 const INITIAL_PROGRAMS: Program[] = [
   {
@@ -40,7 +39,7 @@ const INITIAL_PROGRAMS: Program[] = [
 
 const INITIAL_CONFIG: SiteConfig = {
   heroTitle: '예술로 꿈꾸는 배움터',
-  heroSubtitle: "예술꿈학교는 '문화+예술+교육'을 통해 모든 존재의 고유한 가치를 발견하고 아름다운 공존을 꿈꾸는 곳입니다.",
+  heroSubtitle: "예술꿈학교는 '문화+예술+교육'을 통해 모든 존재의 고유한 가치를 발견하고 조화롭게 살아가는 것에 대해 함께 고민하며 아름다운 공존을 꿈꾸는 곳입니다.",
   primaryColor: '#8B5CF6',
   logoName: '예술꿈학교',
   logoImageUrl: '',
@@ -48,21 +47,28 @@ const INITIAL_CONFIG: SiteConfig = {
   aboutText: "모든 사람은 태어날 때부터 자신만의 빛깔을 지닌 고유한 예술가입니다. 예술은 단순히 정답을 암기하는 것이 아니라, 스스로 세상에 질문을 던지며 내면의 목소리를 발견해 나가는 숭고한 과정입니다.",
   aboutImageUrl: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=1000',
   aboutImagePosition: 'center',
-  heroImageUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=2000',
+  heroImageUrl: '',
   heroImagePosition: 'center'
 };
 
 const App: React.FC = () => {
   const [viewMode, setViewMode] = useState<ViewMode>('home');
   const [programs, setPrograms] = useState<Program[]>(INITIAL_PROGRAMS);
-  const [notices, setNotices] = useState<Notice[]>([]);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [config, setConfig] = useState<SiteConfig>(INITIAL_CONFIG);
+  const [isAdminModeEnabled, setIsAdminModeEnabled] = useState(false);
 
   useEffect(() => {
+    // URL 파라미터 체크 (?admin=true)
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('admin') === 'true') {
+      setIsAdminModeEnabled(true);
+    }
+
     const savedPrograms = localStorage.getItem('art_programs');
     const savedConfig = localStorage.getItem('art_config');
     const savedHistory = localStorage.getItem('art_history');
+
     if (savedPrograms) setPrograms(JSON.parse(savedPrograms));
     if (savedConfig) setConfig(JSON.parse(savedConfig));
     if (savedHistory) setHistory(JSON.parse(savedHistory));
@@ -76,22 +82,25 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-purple-500">
-      <Navbar config={config} viewMode={viewMode} setViewMode={setViewMode} />
+      <Navbar 
+        config={config} 
+        viewMode={viewMode} 
+        setViewMode={setViewMode} 
+        isAdminModeEnabled={isAdminModeEnabled}
+      />
       {viewMode === 'home' ? (
-        <main>
+        <main className="animate-in">
           <Hero config={config} />
           <About config={config} />
           <HistorySection history={history} primaryColor={config.primaryColor} />
           <Programs programs={programs} primaryColor={config.primaryColor} />
           <RequestForm config={config} />
-          <NoticeSection notices={notices} primaryColor={config.primaryColor} />
           <Footer config={config} />
         </main>
       ) : (
         <AdminDashboard 
           config={config} setConfig={setConfig}
           programs={programs} setPrograms={setPrograms}
-          notices={notices} setNotices={setNotices}
           history={history} setHistory={setHistory}
           onExit={() => setViewMode('home')}
         />

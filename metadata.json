@@ -1,6 +1,6 @@
 {
-  "name": "예술꿈학교 - Arts Dream School",
-  "description": "문화예술교육 기획 단체 예술꿈학교의 공식 웹사이트입니다. 창의적인 예술 교육 프로그램을 소개하고 관리할 수 있는 현대적인 플랫폼입니다.",
+  "name": "예술꿈학교 - Art Dream Education Center",
+  "description": "문화예술교육 전문 단체 예술꿈학교의 공식 웹사이트입니다. ",
   "requestFramePermissions": [
     "camera",
     "microphone"

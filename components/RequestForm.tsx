@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { SiteConfig } from '../types';
 
 interface RequestFormProps {
@@ -28,7 +28,6 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  // Get today's date in YYYY-MM-DD format for the min attribute
   const today = new Date().toISOString().split('T')[0];
 
   const validate = (name: string, value: string) => {
@@ -66,8 +65,6 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Validate on the fly if already touched
     if (touched[name]) {
       const error = validate(name, value);
       setErrors(prev => ({ ...prev, [name]: error }));
@@ -82,20 +79,16 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
       date: validate('date', formData.date),
       content: validate('content', formData.content),
     };
-    
     return !Object.values(currentErrors).some(error => error !== '');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Mark all as touched
     const allTouched = Object.keys(formData).reduce((acc, key) => ({ ...acc, [key]: true }), {});
     setTouched(allTouched);
 
     if (!isFormValid()) {
       setStatus('error');
-      // Set errors for all fields to show them
       const newErrors: FormErrors = {
         name: validate('name', formData.name),
         contact: validate('contact', formData.contact),
@@ -108,7 +101,6 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
     }
 
     setStatus('submitting');
-
     try {
       const response = await fetch("https://formspree.io/f/xrepwrre", {
         method: "POST",
@@ -124,14 +116,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
 
       if (response.ok) {
         setStatus('success');
-        setFormData({
-          name: '',
-          contact: '',
-          email: '',
-          date: '',
-          category: '학교문화예술교육',
-          content: ''
-        });
+        setFormData({ name: '', contact: '', email: '', date: '', category: '학교문화예술교육', content: '' });
         setTouched({});
         setErrors({});
         setTimeout(() => setStatus('idle'), 5000);
@@ -145,7 +130,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
   };
 
   const inputClasses = (name: keyof FormErrors) => `
-    w-full bg-white/5 border rounded-2xl px-5 py-4 focus:outline-none transition-all placeholder:text-gray-700
+    w-full bg-white/5 border rounded-2xl px-5 py-4 focus:outline-none transition-all placeholder:text-gray-700 text-sm font-medium
     ${touched[name] && errors[name] 
       ? 'border-red-500/50 focus:border-red-500 ring-1 ring-red-500/20' 
       : 'border-white/10 focus:border-purple-500'}
@@ -158,14 +143,14 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
           <h2 className="text-sm font-black tracking-widest uppercase mb-4" style={{ color: config.primaryColor }}>
             Request
           </h2>
-          <h3 className="text-4xl md:text-5xl font-bold mb-6">강의 의뢰 신청</h3>
-          <p className="text-gray-500 max-w-xl mx-auto leading-relaxed">
+          <h3 className="text-4xl md:text-5xl font-bold mb-6">강의 및 프로젝트 의뢰</h3>
+          <p className="text-gray-500 max-w-xl mx-auto leading-relaxed font-medium">
             예술을 통해 삶의 가치를 발견하는 여정에 예술꿈학교가 함께합니다.<br />
             의뢰 내용을 남겨주시면 담당 예술가가 확인 후 연락드리겠습니다.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="glass p-8 md:p-12 rounded-[2rem] border border-white/5 space-y-8 relative overflow-hidden">
+        <form onSubmit={handleSubmit} className="glass p-8 md:p-12 rounded-[2.5rem] border border-white/5 space-y-8 relative overflow-hidden shadow-2xl">
           {status === 'success' && (
             <div className="absolute inset-0 z-30 glass flex flex-col items-center justify-center text-center p-8 animate-in fade-in duration-500">
               <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: config.primaryColor }}>
@@ -174,11 +159,11 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
                 </svg>
               </div>
               <h4 className="text-2xl font-bold mb-2">접수가 완료되었습니다!</h4>
-              <p className="text-gray-400">보내주신 소중한 의뢰 내용을 확인 후 빠른 시일 내에 연락드리겠습니다.</p>
+              <p className="text-gray-400 font-medium">보내주신 소중한 의뢰 내용을 확인 후 빠른 시일 내에 연락드리겠습니다.</p>
               <button 
                 type="button"
                 onClick={() => setStatus('idle')}
-                className="mt-8 text-sm font-bold underline decoration-purple-500 underline-offset-4"
+                className="mt-8 text-sm font-black uppercase tracking-widest underline decoration-purple-500 underline-offset-8 hover:text-purple-400 transition-colors"
               >
                 추가 신청하기
               </button>
@@ -186,7 +171,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">성함 / 단체명</label>
               <input
                 name="name"
@@ -197,10 +182,10 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
                 className={inputClasses('name')}
               />
               {touched.name && errors.name && (
-                <p className="text-[11px] text-red-400 ml-1 animate-in slide-in-from-top-1 duration-200">{errors.name}</p>
+                <p className="text-[11px] text-red-400 ml-1 font-bold">{errors.name}</p>
               )}
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">연락처</label>
               <input
                 name="contact"
@@ -211,13 +196,13 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
                 className={inputClasses('contact')}
               />
               {touched.contact && errors.contact && (
-                <p className="text-[11px] text-red-400 ml-1 animate-in slide-in-from-top-1 duration-200">{errors.contact}</p>
+                <p className="text-[11px] text-red-400 ml-1 font-bold">{errors.contact}</p>
               )}
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">이메일 주소</label>
               <input
                 type="email"
@@ -229,10 +214,10 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
                 className={inputClasses('email')}
               />
               {touched.email && errors.email && (
-                <p className="text-[11px] text-red-400 ml-1 animate-in slide-in-from-top-1 duration-200">{errors.email}</p>
+                <p className="text-[11px] text-red-400 ml-1 font-bold">{errors.email}</p>
               )}
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">희망 일정</label>
               <input
                 type="date"
@@ -244,19 +229,19 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
                 className={inputClasses('date')}
               />
               {touched.date && errors.date && (
-                <p className="text-[11px] text-red-400 ml-1 animate-in slide-in-from-top-1 duration-200">{errors.date}</p>
+                <p className="text-[11px] text-red-400 ml-1 font-bold">{errors.date}</p>
               )}
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">강의 분야</label>
             <div className="relative">
               <select
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:border-purple-500 transition-all appearance-none cursor-pointer"
+                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:border-purple-500 transition-all appearance-none cursor-pointer text-sm font-medium"
               >
                 <option value="학교문화예술교육" className="bg-neutral-900">학교문화예술교육</option>
                 <option value="사회문화예술교육" className="bg-neutral-900">사회문화예술교육</option>
@@ -272,7 +257,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">상세 의뢰 내용</label>
             <textarea
               name="content"
@@ -284,7 +269,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
               className={inputClasses('content')}
             ></textarea>
             {touched.content && errors.content && (
-              <p className="text-[11px] text-red-400 ml-1 animate-in slide-in-from-top-1 duration-200">{errors.content}</p>
+              <p className="text-[11px] text-red-400 ml-1 font-bold">{errors.content}</p>
             )}
           </div>
 
@@ -292,7 +277,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="w-full py-5 rounded-2xl font-black text-sm uppercase tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-95 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+              className="w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-95 shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
               style={{ backgroundColor: config.primaryColor }}
             >
               {status === 'submitting' ? (
@@ -307,13 +292,8 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
             </button>
             
             {(status === 'error' && !isFormValid()) && (
-              <p className="text-center text-red-500 text-xs font-bold animate-pulse">
-                입력하신 내용에 오류가 있습니다. 붉게 표시된 부분을 확인해주세요.
-              </p>
-            )}
-            {(status === 'error' && isFormValid()) && (
-              <p className="text-center text-red-500 text-xs font-bold animate-pulse">
-                서버 전송 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.
+              <p className="text-center text-red-500 text-[11px] font-black uppercase tracking-widest animate-pulse">
+                입력하신 내용에 오류가 있습니다.
               </p>
             )}
           </div>
