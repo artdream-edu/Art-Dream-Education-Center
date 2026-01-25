@@ -325,7 +325,8 @@ const AdminView = ({ config, setConfig, programs, setPrograms, history, setHisto
                       type="file" 
                       accept="image/*" 
                       className="hidden"
-                      ref={el => progFileRefs.current[p.id] = el}
+                      // Wrapped in a block to ensure it returns void, fixing the TypeScript error
+                      ref={el => { progFileRefs.current[p.id] = el; }}
                       onChange={(e) => handleProgImageUpload(p.id, e)}
                     />
                   </div>

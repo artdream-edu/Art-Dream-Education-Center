@@ -5,6 +5,7 @@ export interface Program {
   description: string;
   category: string;
   imageUrl: string;
+  imagePosition?: string;
 }
 
 export interface Notice {
@@ -25,8 +26,13 @@ export interface SiteConfig {
   heroSubtitle: string;
   primaryColor: string;
   logoName: string;
+  logoImageUrl?: string;
+  logoImagePosition?: string;
   aboutText: string;
   aboutImageUrl: string;
+  aboutImagePosition?: string;
+  heroImageUrl?: string;
+  heroImagePosition?: string;
 }
 
 export type ViewMode = 'home' | 'admin';

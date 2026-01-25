@@ -12,20 +12,30 @@ const Navbar: React.FC<NavbarProps> = ({ config, viewMode, setViewMode }) => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass h-20 flex items-center justify-between px-6 md:px-12">
       <div 
-        className="text-2xl font-black tracking-tighter cursor-pointer"
+        className="flex items-center gap-3 cursor-pointer"
         onClick={() => setViewMode('home')}
       >
-        <span style={{ color: config.primaryColor }}>{config.logoName.split(' ')[0]}</span>
-        {config.logoName.split(' ')[1] || ''}
+        {config.logoImageUrl ? (
+          <img 
+            src={config.logoImageUrl} 
+            alt={config.logoName} 
+            className="h-10 w-auto object-contain"
+            style={{ objectPosition: config.logoImagePosition || 'center' }}
+          />
+        ) : (
+          <div className="text-2xl font-black tracking-tighter">
+            <span style={{ color: config.primaryColor }}>{config.logoName.split(' ')[0]}</span>
+            {config.logoName.split(' ')[1] || ''}
+          </div>
+        )}
       </div>
 
       <div className="flex items-center gap-8">
-        <div className="hidden md:flex items-center gap-8 text-sm font-bold tracking-tight text-gray-400">
+        <div className="hidden md:flex items-center gap-8 text-sm font-bold text-gray-400">
           <a href="#about" className="hover:text-white transition-colors">소개</a>
           <a href="#history" className="hover:text-white transition-colors">연혁</a>
           <a href="#programs" className="hover:text-white transition-colors">사업영역</a>
           <a href="#request" className="hover:text-white transition-colors">의뢰하기</a>
-          <a href="#notices" className="hover:text-white transition-colors">공지사항</a>
         </div>
         
         <button 
