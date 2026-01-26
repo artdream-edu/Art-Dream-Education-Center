@@ -110,18 +110,30 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     </div>
   );
 
-  const ImageControl = ({ label, imageUrl, positionValue, onImageClick, onPositionChange, aspect = "aspect-video" }: any) => (
+  const ImageControl = ({ label, imageUrl, positionValue, onImageClick, onPositionChange, onUrlChange, aspect = "aspect-video" }: any) => (
     <div className="space-y-4 p-6 rounded-3xl bg-white/5 border border-white/10 group transition-all hover:bg-white/[0.08] shadow-2xl">
       <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">{label}</label>
       <div className="flex flex-col md:flex-row gap-8">
-        <div className={`w-full md:w-64 ${aspect} rounded-2xl overflow-hidden border border-white/10 bg-neutral-900 group cursor-pointer relative shadow-2xl`} onClick={onImageClick}>
-          {imageUrl ? (
-            <img src={imageUrl} className="w-full h-full object-cover transition-opacity group-hover:opacity-40" style={{ objectPosition: positionValue || 'center' }} alt="Preview" referrerPolicy="no-referrer" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-700 text-[10px] font-bold uppercase tracking-widest">No Image</div>
-          )}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <span className="bg-white text-black px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-2xl scale-90 group-hover:scale-100 transition-transform">변경하기</span>
+        <div className="w-full md:w-64 space-y-4">
+          <div className={`${aspect} rounded-2xl overflow-hidden border border-white/10 bg-neutral-900 group cursor-pointer relative shadow-2xl`} onClick={onImageClick}>
+            {imageUrl ? (
+              <img src={imageUrl} className="w-full h-full object-cover transition-opacity group-hover:opacity-40" style={{ objectPosition: positionValue || 'center' }} alt="Preview" referrerPolicy="no-referrer" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-700 text-[10px] font-bold uppercase tracking-widest">No Image</div>
+            )}
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="bg-white text-black px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-2xl scale-90 group-hover:scale-100 transition-transform">파일 업로드</span>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label className="block text-[9px] font-black uppercase tracking-widest text-gray-600 ml-1">이미지 URL 직접 입력</label>
+            <input 
+              type="text" 
+              value={imageUrl && !imageUrl.startsWith('data:') ? imageUrl : ''} 
+              onChange={(e) => onUrlChange(e.target.value)}
+              placeholder="https://..."
+              className="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs outline-none focus:border-purple-500 transition-all font-medium text-white"
+            />
           </div>
         </div>
         <div className="flex-1 space-y-4">
@@ -135,6 +147,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               {POSITION_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
             </select>
           </div>
+          <p className="text-[10px] text-gray-500 leading-relaxed font-medium">
+            * 파일을 업로드하거나 이미지 주소(URL)를 직접 입력할 수 있습니다.<br/>
+            * 업로드된 파일은 브라우저 메모리에 저장됩니다.
+          </p>
         </div>
       </div>
     </div>
@@ -189,27 +205,62 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     </div>
                   </div>
                   <InputField label="관리자 비밀번호" type="text" value={config.adminPassword} onChange={(val: string) => updateConfig('adminPassword', val)} />
-                  <ImageControl label="상단 로고 이미지" imageUrl={config.logoImageUrl} positionValue={config.logoImagePosition} onImageClick={() => fileRefs.logo.current?.click()} onPositionChange={(val: any) => updateConfig('logoImagePosition', val)} aspect="aspect-square" />
+                  <ImageControl 
+                    label="상단 로고 이미지" 
+                    imageUrl={config.logoImageUrl} 
+                    positionValue={config.logoImagePosition} 
+                    onImageClick={() => fileRefs.logo.current?.click()} 
+                    onPositionChange={(val: any) => updateConfig('logoImagePosition', val)} 
+                    onUrlChange={(val: string) => updateConfig('logoImageUrl', val)}
+                    aspect="aspect-square" 
+                  />
                   <input type="file" ref={fileRefs.logo} className="hidden" accept="image/*" onChange={(e) => handleImageUpload('logoImageUrl', e)} />
                 </div>
               </section>
 
               <section className="space-y-10 pt-10 border-t border-white/5">
-                <h3 className="text-xl font-black uppercase tracking-widest border-l-4 border-purple-500 pl-5">메인 및 하단 정보</h3>
+                <h3 className="text-xl font-black uppercase tracking-widest border-l-4 border-purple-500 pl-5">메인 및 철학 정보</h3>
                 <div className="grid gap-10">
                   <InputField label="메인 타이틀" value={config.heroTitle} onChange={(val: string) => updateConfig('heroTitle', val)} />
                   <div className="space-y-2">
                     <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">메인 설명 (부제목)</label>
                     <textarea value={config.heroSubtitle} onChange={(e) => updateConfig('heroSubtitle', e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 h-32 outline-none focus:border-purple-500 transition-all font-medium text-gray-300 leading-relaxed" />
                   </div>
+                  
+                  <div className="space-y-2">
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">교육 철학 (Philosophy) 본문</label>
+                    <textarea value={config.aboutText} onChange={(e) => updateConfig('aboutText', e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 h-48 outline-none focus:border-purple-500 transition-all font-medium text-gray-300 leading-relaxed" />
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-10">
+                    <ImageControl 
+                      label="메인 배경 이미지" 
+                      imageUrl={config.heroImageUrl} 
+                      positionValue={config.heroImagePosition} 
+                      onImageClick={() => fileRefs.hero.current?.click()} 
+                      onPositionChange={(val: any) => updateConfig('heroImagePosition', val)} 
+                      onUrlChange={(val: string) => updateConfig('heroImageUrl', val)}
+                    />
+                    <input type="file" ref={fileRefs.hero} className="hidden" accept="image/*" onChange={(e) => handleImageUpload('heroImageUrl', e)} />
+                    
+                    <ImageControl 
+                      label="교육 철학(About) 이미지" 
+                      imageUrl={config.aboutImageUrl} 
+                      positionValue={config.aboutImagePosition} 
+                      onImageClick={() => fileRefs.about.current?.click()} 
+                      onPositionChange={(val: any) => updateConfig('aboutImagePosition', val)} 
+                      onUrlChange={(val: string) => updateConfig('aboutImageUrl', val)}
+                      aspect="aspect-[4/5]" 
+                    />
+                    <input type="file" ref={fileRefs.about} className="hidden" accept="image/*" onChange={(e) => handleImageUpload('aboutImageUrl', e)} />
+                  </div>
+
                   <div className="grid md:grid-cols-2 gap-10">
                     <InputField label="하단 주소" value={config.footerAddress} onChange={(val: string) => updateConfig('footerAddress', val)} />
                     <InputField label="인스타그램 링크" value={config.instagramUrl} onChange={(val: string) => updateConfig('instagramUrl', val)} />
                     <InputField label="유튜브 링크" value={config.youtubeUrl} onChange={(val: string) => updateConfig('youtubeUrl', val)} />
                     <InputField label="블로그 링크" value={config.blogUrl} onChange={(val: string) => updateConfig('blogUrl', val)} />
                   </div>
-                  <ImageControl label="메인 배경 이미지" imageUrl={config.heroImageUrl} positionValue={config.heroImagePosition} onImageClick={() => fileRefs.hero.current?.click()} onPositionChange={(val: any) => updateConfig('heroImagePosition', val)} />
-                  <input type="file" ref={fileRefs.hero} className="hidden" accept="image/*" onChange={(e) => handleImageUpload('heroImageUrl', e)} />
                 </div>
               </section>
             </div>
@@ -232,6 +283,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           positionValue={program.imagePosition} 
                           onImageClick={() => progFileRefs.current[program.id]?.click()} 
                           onPositionChange={(val: any) => { const n = [...programs]; n[idx].imagePosition = val; setPrograms(n); }} 
+                          onUrlChange={(val: string) => { const n = [...programs]; n[idx].imageUrl = val; setPrograms(n); }}
                           aspect="aspect-[4/3]" 
                         />
                         <input type="file" ref={el => { progFileRefs.current[program.id] = el; }} className="hidden" accept="image/*" onChange={(e) => handleProgImageUpload(program.id, e)} />

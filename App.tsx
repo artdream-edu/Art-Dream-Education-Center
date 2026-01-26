@@ -114,8 +114,8 @@ const App: React.FC = () => {
         setConfig({ 
           ...INITIAL_CONFIG, 
           ...parsedConfig,
-          // 로직 보정: 저장된 URL이 drive.google.com을 포함하지 않거나 /images/ 로컬 경로이면 INITIAL_CONFIG의 구글 드라이브 URL로 복구
-          aboutImageUrl: (!parsedConfig.aboutImageUrl || !parsedConfig.aboutImageUrl.includes('drive.google.com'))
+          // 로직 보정: 저장된 URL이 /images/ 로컬 경로이거나 구글 드라이브 링크가 아니면 INITIAL_CONFIG의 새로운 고정 URL로 강제 복구
+          aboutImageUrl: (!parsedConfig.aboutImageUrl || parsedConfig.aboutImageUrl.startsWith('/images/') || !parsedConfig.aboutImageUrl.includes('drive.google.com'))
             ? INITIAL_CONFIG.aboutImageUrl 
             : parsedConfig.aboutImageUrl,
           adminPassword: 'dPtnfRna153'
@@ -130,8 +130,8 @@ const App: React.FC = () => {
         const parsedPrograms = JSON.parse(savedPrograms);
         setPrograms(parsedPrograms.map((p: Program, idx: number) => ({
           ...p,
-          // 개별 프로그램의 URL도 검증하여 구글 드라이브가 아니면 초기값 매칭
-          imageUrl: (!p.imageUrl || !p.imageUrl.includes('drive.google.com'))
+          // 저장된 이미지가 구형 로컬 경로(/images/)이거나 구글 드라이브 링크가 아니면 고정된 초기값으로 강제 업데이트
+          imageUrl: (!p.imageUrl || p.imageUrl.startsWith('/images/') || !p.imageUrl.includes('drive.google.com'))
             ? (INITIAL_PROGRAMS[idx]?.imageUrl || p.imageUrl)
             : p.imageUrl
         })));
@@ -185,10 +185,7 @@ const App: React.FC = () => {
             config={config} setConfig={setConfig}
             programs={programs} setPrograms={setPrograms}
             history={history} setHistory={setHistory}
-            onExit={() => {
-              setViewMode('home');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+            onExit={() => setViewMode('home')}
           />
         </div>
       )}
