@@ -11,6 +11,7 @@ import AdminDashboard from './components/AdminDashboard';
 import AiAssistant from './components/AiAssistant';
 import { Program, SiteConfig, ViewMode, HistoryItem } from './types';
 
+// 시스템 기본 연혁 데이터 (데이터가 없을 때만 사용됨)
 const INITIAL_HISTORY: HistoryItem[] = [
   { id: 'h1', year: '2013', event: '• 예술꿈학교 설립(2013.12.02)\n• 지역아동센터 문화예술교육 프로그램 개발 및 실행\n• 생애주기별 문화예술교육 프로그램 개발 및 실행' },
   { id: 'h2', year: '2014', event: '• 문화예술교육사활용모델발굴지원사업 <숙성공정> / 주관:한국문화예술교육진흥원\n• 찾아가는민주시민토론극 <나... 할말있어> / 주최:경기도교육청\n• 꿈다락토요문화학교 <배우를꿈꾸다> / 주관:한국문화예술교육진흥원\n• 부처간협력문화예술교육(학교밖청소년) <우물쭈물넌참소중해> / 주최:문화체육관광부, 여성가족부' },
@@ -27,6 +28,7 @@ const INITIAL_HISTORY: HistoryItem[] = [
   { id: 'h13', year: '2025', event: '• 인천어린이연극잔치 심사/인천시교육청\n• 서울청소년연극제 심사/서울연극협회\n• 문화예술교육사 현장역량강화사업 컨설팅 및 워크숍/인천문화재단\n• 국립어린이박물관과 함께하는 늘봄학교 프로그램 교육가이드 개발 및 연수/한국문화예술교육진흥원\n• 꿈다락문화예술학교<프로젝트 너머> 기획 및 교육/한국문화예술교육진흥원\n• 청소년 문화예술교육 지원사업 방학일기<청소년 인생설계 프로젝트-플레이 스테이지> 기획 및 교육/제주문화예술재단' }
 ];
 
+// 시스템 기본 사업 영역 데이터
 const INITIAL_PROGRAMS: Program[] = [
   {
     id: 'p1',
@@ -78,6 +80,7 @@ const INITIAL_PROGRAMS: Program[] = [
   }
 ];
 
+// 시스템 기본 설정
 const INITIAL_CONFIG: SiteConfig = {
   heroTitle: '예술로 꿈꾸는 배움터',
   heroSubtitle: "예술꿈학교는 '문화+예술+교육'을 통해 모든 존재의 고유한 가치를 발견하고 조화롭게 살아가는 것에 대해 함께 고민하며 아름다운 공존을 꿈꾸는 곳입니다.",
@@ -103,6 +106,7 @@ const App: React.FC = () => {
   const [history, setHistory] = useState<HistoryItem[]>(INITIAL_HISTORY);
   const [config, setConfig] = useState<SiteConfig>(INITIAL_CONFIG);
 
+  // 로컬 스토리지 데이터 로드 (컴포넌트 마운트 시 1회 실행)
   useEffect(() => {
     const savedPrograms = localStorage.getItem('art_programs');
     const savedConfig = localStorage.getItem('art_config');
@@ -110,55 +114,46 @@ const App: React.FC = () => {
 
     if (savedConfig) {
       try {
-        const parsedConfig = JSON.parse(savedConfig);
-        setConfig({ 
-          ...INITIAL_CONFIG, 
-          ...parsedConfig,
-          // 로직 보정: 저장된 URL이 /images/ 로컬 경로이거나 구글 드라이브 링크가 아니면 INITIAL_CONFIG의 새로운 고정 URL로 강제 복구
-          aboutImageUrl: (!parsedConfig.aboutImageUrl || parsedConfig.aboutImageUrl.startsWith('/images/') || !parsedConfig.aboutImageUrl.includes('drive.google.com'))
-            ? INITIAL_CONFIG.aboutImageUrl 
-            : parsedConfig.aboutImageUrl,
-          adminPassword: 'dPtnfRna153'
-        });
+        const parsed = JSON.parse(savedConfig);
+        // 저장된 데이터가 초기 이미지 경로(/images/)를 포함하고 있을 때만 초기값으로 대체하고, 그 외 사용자가 바꾼 모든 값(Base64 포함)은 유지함
+        setConfig(prev => ({
+          ...INITIAL_CONFIG,
+          ...parsed,
+          aboutImageUrl: (parsed.aboutImageUrl && parsed.aboutImageUrl.startsWith('/images/')) ? INITIAL_CONFIG.aboutImageUrl : (parsed.aboutImageUrl || INITIAL_CONFIG.aboutImageUrl),
+          adminPassword: 'dPtnfRna153' // 패스워드는 코드 보안을 위해 고정
+        }));
       } catch (e) {
-        console.error("Config load error", e);
+        console.error("Config load fail", e);
       }
     }
 
     if (savedPrograms) {
       try {
-        const parsedPrograms = JSON.parse(savedPrograms);
-        setPrograms(parsedPrograms.map((p: Program, idx: number) => ({
-          ...p,
-          // 저장된 이미지가 구형 로컬 경로(/images/)이거나 구글 드라이브 링크가 아니면 고정된 초기값으로 강제 업데이트
-          imageUrl: (!p.imageUrl || p.imageUrl.startsWith('/images/') || !p.imageUrl.includes('drive.google.com'))
-            ? (INITIAL_PROGRAMS[idx]?.imageUrl || p.imageUrl)
-            : p.imageUrl
-        })));
+        const parsed = JSON.parse(savedPrograms);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setPrograms(parsed.map((p, idx) => ({
+            ...p,
+            imageUrl: (p.imageUrl && p.imageUrl.startsWith('/images/')) ? (INITIAL_PROGRAMS[idx]?.imageUrl || p.imageUrl) : p.imageUrl
+          })));
+        }
       } catch (e) {
-        console.error("Programs load error", e);
-        setPrograms(INITIAL_PROGRAMS);
+        console.error("Programs load fail", e);
       }
-    } else {
-      setPrograms(INITIAL_PROGRAMS);
     }
     
     if (savedHistory) {
       try {
-        const parsedHistory = JSON.parse(savedHistory);
-        if (Array.isArray(parsedHistory) && parsedHistory.length > 0) {
-          setHistory(parsedHistory);
-        } else {
-          setHistory(INITIAL_HISTORY);
+        const parsed = JSON.parse(savedHistory);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setHistory(parsed);
         }
       } catch (e) {
-        setHistory(INITIAL_HISTORY);
+        console.error("History load fail", e);
       }
-    } else {
-      setHistory(INITIAL_HISTORY);
     }
   }, []);
 
+  // 상태 변화 감지 및 로컬 스토리지 동기화
   useEffect(() => {
     localStorage.setItem('art_programs', JSON.stringify(programs));
     localStorage.setItem('art_config', JSON.stringify(config));
@@ -185,7 +180,10 @@ const App: React.FC = () => {
             config={config} setConfig={setConfig}
             programs={programs} setPrograms={setPrograms}
             history={history} setHistory={setHistory}
-            onExit={() => setViewMode('home')}
+            onExit={() => {
+              setViewMode('home');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
           />
         </div>
       )}
