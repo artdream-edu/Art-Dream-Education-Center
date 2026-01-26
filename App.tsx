@@ -108,11 +108,28 @@ const App: React.FC = () => {
     const savedConfig = localStorage.getItem('art_config');
     const savedHistory = localStorage.getItem('art_history');
 
+    // Load configuration, but ensure defaults for images if localStorage is empty or old
     if (savedConfig) {
       const parsedConfig = JSON.parse(savedConfig);
-      setConfig({ ...INITIAL_CONFIG, ...parsedConfig, adminPassword: 'dPtnfRna153' });
+      // Merge but prioritize INITIAL images if the saved one looks like an old unsplash/invalid URL
+      setConfig({ 
+        ...INITIAL_CONFIG, 
+        ...parsedConfig, 
+        adminPassword: 'dPtnfRna153' 
+      });
     }
-    if (savedPrograms) setPrograms(JSON.parse(savedPrograms));
+
+    if (savedPrograms) {
+      const parsedPrograms = JSON.parse(savedPrograms);
+      // Ensure paths are correct even if loaded from old localStorage
+      setPrograms(parsedPrograms.map((p: Program, idx: number) => ({
+        ...p,
+        // If image URL is missing or looks like an old unsplash URL, fall back to initial local path
+        imageUrl: p.imageUrl && p.imageUrl.startsWith('/images/') ? p.imageUrl : INITIAL_PROGRAMS[idx]?.imageUrl || p.imageUrl
+      })));
+    } else {
+      setPrograms(INITIAL_PROGRAMS);
+    }
     
     if (savedHistory && JSON.parse(savedHistory).length > 0) {
       setHistory(JSON.parse(savedHistory));
@@ -121,11 +138,43 @@ const App: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('art_programs', JSON.stringify(programs));
-    localStorage.setItem('art_config', JSON.stringify(config));
-    localStorage.setItem('art_history', JSON.stringify(history));
-  }, [programs, config, history]);
+useEffect(() => {
+  const savedPrograms = localStorage.getItem('art_programs');
+  const savedConfig = localStorage.getItem('art_config');
+  const savedHistory = localStorage.getItem('art_history');
+
+  // 1. Config 로드 및 이미지 경로 강제 수정
+  if (savedConfig) {
+    const parsedConfig = JSON.parse(savedConfig);
+    setConfig({ 
+      ...parsedConfig,
+      // 만약 저장된 경로가 /images/로 시작하지 않으면 초기 설정값 사용
+      aboutImageUrl: parsedConfig.aboutImageUrl?.startsWith('/images/') 
+        ? parsedConfig.aboutImageUrl 
+        : INITIAL_CONFIG.aboutImageUrl,
+      adminPassword: 'dPtnfRna153' 
+    });
+  }
+
+  // 2. Programs 로드 및 이미지 경로 강제 수정
+  if (savedPrograms) {
+    const parsedPrograms = JSON.parse(savedPrograms);
+    setPrograms(parsedPrograms.map((p: Program, idx: number) => ({
+      ...p,
+      // 저장된 이미지가 외부 URL이거나 잘못되었다면 /images/program_X.jpg로 강제 매칭
+      imageUrl: p.imageUrl?.startsWith('/images/') 
+        ? p.imageUrl 
+        : `/images/program_${idx + 1}.jpg`
+    })));
+  } else {
+    setPrograms(INITIAL_PROGRAMS);
+  }
+  
+  if (savedHistory) {
+    const parsedHistory = JSON.parse(savedHistory);
+    if (parsedHistory.length > 0) setHistory(parsedHistory);
+  }
+}, []);
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-purple-500">
