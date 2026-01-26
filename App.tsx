@@ -14,7 +14,7 @@ import { Program, SiteConfig, ViewMode, HistoryItem } from './types';
 // 시스템 기본 연혁 데이터
 const INITIAL_HISTORY: HistoryItem[] = [
   { id: 'h1', year: '2013', event: '• 예술꿈학교 설립(2013.12.02)\n• 지역아동센터 문화예술교육 프로그램 개발 및 실행\n• 생애주기별 문화예술교육 프로그램 개발 및 실행' },
-  { id: 'h2', year: '2014', event: '• 문화예술교육사활용모델발굴지원사업 <숙성공정> / 주관:한국문화예술교육진흥원\n• 찾아가는민주시민토론극 <나... 할말있어> / 주최:경기도교육청\n• 꿈다락토요문화학교 <배우를꿈꾸다> / 주관:한국문화예술교육진흥원\n• 부처간협력문화예술교육(학교밖청소년) <우물쭈물넌참소중해> / 주최:문화체육관광부, 여성가족부' },
+  { id: 'h2', year: '2014', event: '• 문화예술교육사활용모델발굴지원사업 <숙성공정> / 주관:한국문화예술교육진흥원\n• 찾아가는민주시민토론극 <나... 할말있어> / 주최:경기도교육청\n• 꿈다락토요문화학교 <배우를꿈꾸다> / 주관:한국문화예술교육진흥원\n• 부처간협력문화예술교육(학교밖청소년) <우물쭈물넌참소중해> / 주최:문화체욕관광부, 여성가족부' },
   { id: 'h3', year: '2015', event: '• 가족나눔교육패밀리메이커 / 주최:홀트아동복지회\n• 청소년예술가프로젝트 <도도한연극단> / 주최:구로문화재단\n• 배움터지원사업 <네꿈을펼쳐라> / 주최:삼성꿈장학재단\n• 어르신문화예술교육 <내인생의풍년> / 주관:서초구민회관' },
   { id: 'h4', year: '2016', event: '• 예술인창작지원사업-가족참여극 <좋아요, 더좋아요> / 주최:한국예술인복지재단\n• 부처간협력문화예술교육(학교밖청소년) <별학교별별의별이야기> / 주최:문화체육관광부, 여성가족부\n• 부처간협력문화예술교육(비행청소년) <흔들바람, 소수풍경> / 주최:문화체육관광부, 법무부\n• 부처간협력문화예술교육(군부대) <청춘예찬> / 주최:문화체육관광부, 국방부\n• 쉼표형토요꿈의학교 <나를발견하는나발학교> / 경기도교육청\n• 배움터지원사업 <꽃들에게희망을> / 삼성꿈장학재단' },
   { id: 'h5', year: '2017', event: '• 부처간협력문화예술교육(학교밖청소년) <이야기연극에담다> / 주최:문화체육관광부, 여성가족부\n• 지역특성화문화예술교육 <우리동네작은극장프로젝트> / 주관:인천문화재단, 인천문화예술교육지원센터\n• 꿈다락토요문화학교 <청소년아키비스트> / 주관:영종도서관\n• 전국교직원노동조합 충북지부 진천지회 조합원 교육연극 연수 / 주최:전교조 진천지회' },
@@ -28,7 +28,7 @@ const INITIAL_HISTORY: HistoryItem[] = [
   { id: 'h13', year: '2025', event: '• 인천어린이연극잔치 심사/인천시교육청\n• 서울청소년연극제 심사/서울연극협회\n• 문화예술교육사 현장역량강화사업 컨설팅 및 워크숍/인천문화재단\n• 국립어린이박물관과 함께하는 늘봄학교 프로그램 교육가이드 개발 및 연수/한국문화예술교육진흥원\n• 꿈다락문화예술학교<프로젝트 너머> 기획 및 교육/한국문화예술교육진흥원\n• 청소년 문화예술교육 지원사업 방학일기<청소년 인생설계 프로젝트-플레이 스테이지> 기획 및 교육/제주문화예술재단' }
 ];
 
-// 시스템 기본 사업 영역 데이터 (주제별 고화질 예술 이미지)
+// 시스템 기본 사업 영역 데이터
 const INITIAL_PROGRAMS: Program[] = [
   {
     id: 'p1',
@@ -80,7 +80,9 @@ const INITIAL_PROGRAMS: Program[] = [
   }
 ];
 
-// 시스템 기본 설정 (철학 이미지 포함)
+// 활기찬 자연 속 아이들 이미지 (더욱 생동감 넘치는 것으로 교체)
+const NATURE_KIDS_IMAGE = "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?q=80&w=2000&auto=format&fit=crop";
+
 const INITIAL_CONFIG: SiteConfig = {
   heroTitle: '예술로 꿈꾸는 배움터',
   heroSubtitle: "예술꿈학교는 '문화+예술+교육'을 통해 모든 존재의 고유한 가치를 발견하고 조화롭게 살아가는 것에 대해 함께 고민하며 아름다운 공존을 꿈꾸는 곳입니다.",
@@ -89,7 +91,7 @@ const INITIAL_CONFIG: SiteConfig = {
   logoImageUrl: '',
   logoImagePosition: 'center',
   aboutText: `모든 사람은 태어날 때부터 자신만의 빛깔을 지닌 고유한 예술가입니다. 예술교육은 스스로 세상에 질문을 던지며 내면의 목소리를 발견해 나가는 숭고한 과정입니다. 예술꿈학교는 정형화된 교육의 틀을 깨고, 개인의 예술적 감각이 배움의 동력이 되는 경이로운 순간을 설계합니다. 우리는 모든 이가 자유로운 표현의 주체가 되어 마음껏 상상하고 경험하며, 예술 통해 삶의 깊이를 더해가는 '성장의 놀이터'를 꿈꿉니다.`,
-  aboutImageUrl: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=2000&auto=format&fit=crop', 
+  aboutImageUrl: NATURE_KIDS_IMAGE, 
   aboutImagePosition: 'center',
   heroImageUrl: '',
   heroImagePosition: 'center',
@@ -106,23 +108,31 @@ const App: React.FC = () => {
   const [history, setHistory] = useState<HistoryItem[]>(INITIAL_HISTORY);
   const [config, setConfig] = useState<SiteConfig>(INITIAL_CONFIG);
 
-  // 로컬 스토리지 데이터 로드 및 오류 이미지 복구
   useEffect(() => {
     const savedPrograms = localStorage.getItem('art_programs');
     const savedConfig = localStorage.getItem('art_config');
     const savedHistory = localStorage.getItem('art_history');
 
-    // 1. 설정 로드
     if (savedConfig) {
       try {
         const parsed = JSON.parse(savedConfig);
+        
+        // 이전 이미지들을 감지하여 새로운 활기찬 이미지로 강제 업데이트
+        const outdatedKeywords = [
+          'photo-1492684223066-81342ee5ff30', // 빈 무대
+          'photo-1516280440614-37939bbacd81', // 워크숍 이미지
+          'photo-1481653125770-b78c206c59d4', // 이전 버전 자연 이미지
+          'photo-1547592166-23ac45744acd'
+        ];
+        
+        const needsUpdate = !parsed.aboutImageUrl || 
+                            parsed.aboutImageUrl.includes('error') || 
+                            outdatedKeywords.some(kw => parsed.aboutImageUrl.includes(kw));
+
         setConfig({
           ...INITIAL_CONFIG,
           ...parsed,
-          // 이미지가 깨졌거나 비정상적인 경우 기본 고화질 이미지로 교체
-          aboutImageUrl: (!parsed.aboutImageUrl || parsed.aboutImageUrl.includes('error') || parsed.aboutImageUrl.startsWith('/images/')) 
-            ? INITIAL_CONFIG.aboutImageUrl 
-            : parsed.aboutImageUrl,
+          aboutImageUrl: needsUpdate ? INITIAL_CONFIG.aboutImageUrl : parsed.aboutImageUrl,
           adminPassword: 'dPtnfRna153'
         });
       } catch (e) {
@@ -130,15 +140,13 @@ const App: React.FC = () => {
       }
     }
 
-    // 2. 프로그램 로드
     if (savedPrograms) {
       try {
         const parsed = JSON.parse(savedPrograms);
         if (Array.isArray(parsed) && parsed.length > 0) {
           setPrograms(parsed.map((p, idx) => ({
             ...p,
-            // 특정 인덱스의 이미지가 오류라면 INITIAL_PROGRAMS에서 가져옴
-            imageUrl: (!p.imageUrl || p.imageUrl.includes('error') || p.imageUrl.startsWith('/images/')) 
+            imageUrl: (!p.imageUrl || p.imageUrl.includes('error')) 
               ? (INITIAL_PROGRAMS[idx]?.imageUrl || p.imageUrl) 
               : p.imageUrl
           })));
@@ -148,7 +156,6 @@ const App: React.FC = () => {
       }
     }
     
-    // 3. 연혁 로드
     if (savedHistory) {
       try {
         const parsed = JSON.parse(savedHistory);
@@ -161,7 +168,6 @@ const App: React.FC = () => {
     }
   }, []);
 
-  // 상태 변화 감지 및 로컬 스토리지 동기화
   useEffect(() => {
     localStorage.setItem('art_programs', JSON.stringify(programs));
     localStorage.setItem('art_config', JSON.stringify(config));
