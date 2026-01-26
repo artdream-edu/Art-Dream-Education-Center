@@ -21,6 +21,11 @@ export interface HistoryItem {
   event: string;
 }
 
+export interface ChatMessage {
+  role: 'user' | 'model';
+  text: string;
+}
+
 export interface SiteConfig {
   heroTitle: string;
   heroSubtitle: string;
@@ -34,6 +39,10 @@ export interface SiteConfig {
   heroImageUrl?: string;
   heroImagePosition?: string;
   adminPassword?: string;
+  footerAddress?: string;
+  instagramUrl?: string;
+  youtubeUrl?: string;
+  blogUrl?: string;
 }
 
 export type ViewMode = 'home' | 'admin';

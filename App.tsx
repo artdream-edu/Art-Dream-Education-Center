@@ -8,6 +8,7 @@ import HistorySection from './components/HistorySection';
 import RequestForm from './components/RequestForm';
 import Footer from './components/Footer';
 import AdminDashboard from './components/AdminDashboard';
+import AiAssistant from './components/AiAssistant';
 import { Program, SiteConfig, ViewMode, HistoryItem } from './types';
 
 const INITIAL_PROGRAMS: Program[] = [
@@ -34,6 +35,30 @@ const INITIAL_PROGRAMS: Program[] = [
     category: '역량 강화',
     imageUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800',
     imagePosition: 'center'
+  },
+  {
+    id: 'p4',
+    title: '출판 & 교육콘텐츠 개발',
+    description: '문화예술교육과 관련한 도서 및 교육콘텐츠를 연구, 개발, 보급합니다.',
+    category: 'R&D',
+    imageUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800',
+    imagePosition: 'center'
+  },
+  {
+    id: 'p5',
+    title: '공연기획 및 제작',
+    description: '아동청소년극, 시민연극, 참여형 연극, 토크콘서트 등 관객과 긴밀하게 호흡하며 메시지를 전달하는 예술 무대를 제작합니다.',
+    category: '공연 제작',
+    imageUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800',
+    imagePosition: 'center'
+  },
+  {
+    id: 'p6',
+    title: '바이블플레이',
+    description: `기독교 가치관을 담은 문화예술교육, 교회학교 교사 워크숍 등 신앙과 예술을 결합한 프로그램을 제공합니다.`,
+    category: '기독교 예술교육',
+    imageUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800',
+    imagePosition: 'center'
   }
 ];
 
@@ -44,12 +69,16 @@ const INITIAL_CONFIG: SiteConfig = {
   logoName: '예술꿈학교',
   logoImageUrl: '',
   logoImagePosition: 'center',
-  aboutText: "모든 사람은 태어날 때부터 자신만의 빛깔을 지닌 고유한 예술가입니다. 예술은 단순히 정답을 암기하는 것이 아니라, 스스로 세상에 질문을 던지며 내면의 목소리를 발견해 나가는 숭고한 과정입니다.",
+  aboutText: `모든 사람은 태어날 때부터 자신만의 빛깔을 지닌 고유한 예술가입니다. 예술교육은 스스로 세상에 질문을 던지며 내면의 목소리를 발견해 나가는 숭고한 과정입니다. 예술꿈학교는 정형화된 교육의 틀을 깨고, 개인의 예술적 감각이 배움의 동력이 되는 경이로운 순간을 설계합니다. 우리는 모든 이가 자유로운 표현의 주체가 되어 마음껏 상상하고 경험하며, 예술 통해 삶의 깊이를 더해가는 '성장의 놀이터'를 꿈꿉니다.`,
   aboutImageUrl: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=1000',
   aboutImagePosition: 'center',
   heroImageUrl: '',
   heroImagePosition: 'center',
-  adminPassword: '000000'
+  adminPassword: '000000',
+  footerAddress: '경기도 하남시 미사강변한강로 135, 다동 9층 938호 (미사강변 스카이폴리스)',
+  instagramUrl: 'https://www.instagram.com/artdream_edu',
+  youtubeUrl: 'https://youtube.com/@artdream_edu',
+  blogUrl: 'https://blog.naver.com/artdream_official'
 };
 
 const App: React.FC = () => {
@@ -57,25 +86,14 @@ const App: React.FC = () => {
   const [programs, setPrograms] = useState<Program[]>(INITIAL_PROGRAMS);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [config, setConfig] = useState<SiteConfig>(INITIAL_CONFIG);
-  const [isAdminModeEnabled, setIsAdminModeEnabled] = useState(false);
 
   useEffect(() => {
-    // URL 파라미터 체크 (?admin=true)
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('admin') === 'true') {
-      setIsAdminModeEnabled(true);
-    }
-
     const savedPrograms = localStorage.getItem('art_programs');
     const savedConfig = localStorage.getItem('art_config');
     const savedHistory = localStorage.getItem('art_history');
 
+    if (savedConfig) setConfig({ ...INITIAL_CONFIG, ...JSON.parse(savedConfig) });
     if (savedPrograms) setPrograms(JSON.parse(savedPrograms));
-    if (savedConfig) {
-      const parsedConfig = JSON.parse(savedConfig);
-      // 기존 저장된 데이터에 비밀번호가 없는 경우를 대비해 병합
-      setConfig({ ...INITIAL_CONFIG, ...parsedConfig });
-    }
     if (savedHistory) setHistory(JSON.parse(savedHistory));
   }, []);
 
@@ -87,12 +105,8 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-purple-500">
-      <Navbar 
-        config={config} 
-        viewMode={viewMode} 
-        setViewMode={setViewMode} 
-        isAdminModeEnabled={isAdminModeEnabled}
-      />
+      <Navbar config={config} viewMode={viewMode} setViewMode={setViewMode} />
+      
       {viewMode === 'home' ? (
         <main className="animate-in">
           <Hero config={config} />
@@ -101,14 +115,20 @@ const App: React.FC = () => {
           <Programs programs={programs} primaryColor={config.primaryColor} />
           <RequestForm config={config} />
           <Footer config={config} />
+          <AiAssistant config={config} />
         </main>
       ) : (
-        <AdminDashboard 
-          config={config} setConfig={setConfig}
-          programs={programs} setPrograms={setPrograms}
-          history={history} setHistory={setHistory}
-          onExit={() => setViewMode('home')}
-        />
+        <div className="animate-in fade-in duration-500">
+          <AdminDashboard 
+            config={config} setConfig={setConfig}
+            programs={programs} setPrograms={setPrograms}
+            history={history} setHistory={setHistory}
+            onExit={() => {
+              setViewMode('home');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        </div>
       )}
     </div>
   );
