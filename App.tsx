@@ -92,7 +92,11 @@ const App: React.FC = () => {
     const savedConfig = localStorage.getItem('art_config');
     const savedHistory = localStorage.getItem('art_history');
 
-    if (savedConfig) setConfig({ ...INITIAL_CONFIG, ...JSON.parse(savedConfig) });
+    if (savedConfig) {
+      const parsedConfig = JSON.parse(savedConfig);
+      // Ensure the admin password is updated if changed
+      setConfig({ ...INITIAL_CONFIG, ...parsedConfig, adminPassword: 'dPtnfRna153' });
+    }
     if (savedPrograms) setPrograms(JSON.parse(savedPrograms));
     if (savedHistory) setHistory(JSON.parse(savedHistory));
   }, []);
@@ -113,9 +117,10 @@ const App: React.FC = () => {
           <About config={config} />
           <HistorySection history={history} primaryColor={config.primaryColor} />
           <Programs programs={programs} primaryColor={config.primaryColor} />
+          {/* 의뢰하기 섹션 복구 확인 */}
           <RequestForm config={config} />
           <Footer config={config} />
-          {/* Add AI Assistant to home view */}
+          {/* Floating AI Assistant Component */}
           <AiAssistant config={config} />
         </main>
       ) : (
