@@ -138,6 +138,21 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
 
   return (
     <section id="request" className="py-24 px-6 md:px-12 bg-black">
+      <style>{`
+        input[type="date"]::-webkit-calendar-picker-indicator {
+          filter: invert(1);
+          opacity: 0;
+          position: absolute;
+          right: 0;
+          width: 100%;
+          height: 100%;
+          cursor: pointer;
+        }
+        .date-input-container:hover .custom-calendar-icon {
+          opacity: 1;
+          transform: scale(1.1);
+        }
+      `}</style>
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-sm font-black tracking-widest uppercase mb-4" style={{ color: config.primaryColor }}>
@@ -219,15 +234,25 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
             </div>
             <div className="space-y-3">
               <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">희망 일정</label>
-              <input
-                type="date"
-                name="date"
-                min={today}
-                value={formData.date}
-                onChange={handleChange}
-                onBlur={() => handleBlur('date')}
-                className={inputClasses('date')}
-              />
+              <div className="relative date-input-container">
+                <input
+                  type="date"
+                  name="date"
+                  min={today}
+                  value={formData.date}
+                  onChange={handleChange}
+                  onBlur={() => handleBlur('date')}
+                  className={`${inputClasses('date')} pr-14 relative z-10`}
+                />
+                <div 
+                  className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none transition-all custom-calendar-icon opacity-70 flex items-center gap-2"
+                  style={{ color: config.primaryColor }}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
               {touched.date && errors.date && (
                 <p className="text-[11px] text-red-400 ml-1 font-bold">{errors.date}</p>
               )}
