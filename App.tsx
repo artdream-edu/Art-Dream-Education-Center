@@ -33,7 +33,7 @@ const INITIAL_PROGRAMS: Program[] = [
     title: '학교문화예술교육',
     description: '예술과 공교육의 연계. 국가공인 문화예술교육사의 방문 교육을 통해 학생들의 문화적 감수성 및 인성·창의력을 향상시킵니다.',
     category: '공교육 연계',
-    imageUrl: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=800',
+    imageUrl: '/images/program_1.jpg',
     imagePosition: 'center'
   },
   {
@@ -41,7 +41,7 @@ const INITIAL_PROGRAMS: Program[] = [
     title: '사회문화예술교육',
     description: '지역아동센터, 노인복지관, 장애인시설 등 소외계층을 대상으로 문화예술의 접근성을 높이고 소통을 지원합니다.',
     category: '지역사회 공헌',
-    imageUrl: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&q=80&w=800',
+    imageUrl: '/images/program_2.jpg',
     imagePosition: 'center'
   },
   {
@@ -49,7 +49,7 @@ const INITIAL_PROGRAMS: Program[] = [
     title: '전문인력양성',
     description: '예술강사, 교원, 기업 대상의 온·오프라인 연수 및 문화예술교육사 현장 역량강화 워크숍을 기획합니다.',
     category: '역량 강화',
-    imageUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800',
+    imageUrl: '/images/program_3.jpg',
     imagePosition: 'center'
   },
   {
@@ -57,7 +57,7 @@ const INITIAL_PROGRAMS: Program[] = [
     title: '출판 & 교육콘텐츠 개발',
     description: '문화예술교육과 관련한 도서 및 교육콘텐츠를 연구, 개발, 보급합니다.',
     category: 'R&D',
-    imageUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800',
+    imageUrl: '/images/program_4.jpg',
     imagePosition: 'center'
   },
   {
@@ -65,7 +65,7 @@ const INITIAL_PROGRAMS: Program[] = [
     title: '공연기획 및 제작',
     description: '아동청소년극, 시민연극, 참여형 연극, 토크콘서트 등 관객과 긴밀하게 호흡하며 메시지를 전달하는 예술 무대를 제작합니다.',
     category: '공연 제작',
-    imageUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800',
+    imageUrl: '/images/program_5.jpg',
     imagePosition: 'center'
   },
   {
@@ -73,7 +73,7 @@ const INITIAL_PROGRAMS: Program[] = [
     title: '바이블플레이',
     description: `기독교 가치관을 담은 문화예술교육, 교회학교 교사 워크숍 등 신앙과 예술을 결합한 프로그램을 제공합니다.`,
     category: '기독교 예술교육',
-    imageUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800',
+    imageUrl: '/images/program_6.jpg',
     imagePosition: 'center'
   }
 ];
@@ -86,8 +86,7 @@ const INITIAL_CONFIG: SiteConfig = {
   logoImageUrl: '',
   logoImagePosition: 'center',
   aboutText: `모든 사람은 태어날 때부터 자신만의 빛깔을 지닌 고유한 예술가입니다. 예술교육은 스스로 세상에 질문을 던지며 내면의 목소리를 발견해 나가는 숭고한 과정입니다. 예술꿈학교는 정형화된 교육의 틀을 깨고, 개인의 예술적 감각이 배움의 동력이 되는 경이로운 순간을 설계합니다. 우리는 모든 이가 자유로운 표현의 주체가 되어 마음껏 상상하고 경험하며, 예술 통해 삶의 깊이를 더해가는 '성장의 놀이터'를 꿈꿉니다.`,
-  // 사용자가 제공한 이미지를 base64로 포함 (실제 환경에서는 업로드된 이미지의 base64 스트링이 들어감)
-  aboutImageUrl: 'https://images.unsplash.com/photo-1514525253361-bee8718a300a?auto=format&fit=crop&q=80&w=1200', 
+  aboutImageUrl: '/images/about_main.jpg', 
   aboutImagePosition: 'center',
   heroImageUrl: '',
   heroImagePosition: 'center',
