@@ -1,5 +1,5 @@
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { Program, SiteConfig, HistoryItem } from '../types';
 
 interface AdminDashboardProps {
@@ -15,9 +15,8 @@ interface AdminDashboardProps {
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ 
   config, setConfig, programs, setPrograms, history, setHistory, onExit 
 }) => {
-  const [activeTab, setActiveTab] = React.useState<'config' | 'programs' | 'history' | 'ai'>('config');
+  const [activeTab, setActiveTab] = React.useState<'config' | 'programs' | 'history'>('config');
   const [saveMessage, setSaveMessage] = useState('');
-  const [isAiConnected, setIsAiConnected] = useState(false);
   
   const fileRefs = {
     logo: useRef<HTMLInputElement>(null),
@@ -26,34 +25,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     import: useRef<HTMLInputElement>(null),
   };
   const progFileRefs = useRef<{[key: string]: HTMLInputElement | null}>({});
-
-  useEffect(() => {
-    const checkAiStatus = async () => {
-      try {
-        if (typeof window.aistudio?.hasSelectedApiKey === 'function') {
-          const connected = await window.aistudio.hasSelectedApiKey();
-          setIsAiConnected(connected);
-        }
-      } catch (e) {
-        console.warn("AI Studio connection status check failed");
-      }
-    };
-    checkAiStatus();
-  }, []);
-
-  const handleOpenAiKeySelect = async () => {
-    try {
-      if (typeof window.aistudio?.openSelectKey === 'function') {
-        await window.aistudio.openSelectKey();
-        setIsAiConnected(true);
-        showFeedback("AI 연결 창을 열었습니다.");
-      } else {
-        alert("이 환경에서는 API 키 선택기를 열 수 없습니다.");
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
 
   const showFeedback = (msg: string) => {
     setSaveMessage(msg);
@@ -192,13 +163,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
 
         <div className="flex flex-wrap gap-2 mb-10 border-b border-white/10 pb-4">
-          {(['config', 'programs', 'history', 'ai'] as const).map(tab => (
+          {(['config', 'programs', 'history'] as const).map(tab => (
             <button 
               key={tab} 
               onClick={() => setActiveTab(tab)} 
               className={`text-[11px] font-black uppercase tracking-widest px-8 py-4 transition-all rounded-t-2xl ${activeTab === tab ? 'text-white bg-white/10' : 'text-gray-500 hover:text-white'}`}
             >
-              {tab === 'config' ? '브랜드' : tab === 'programs' ? '사업 영역' : tab === 'history' ? '연혁' : 'AI 설정'}
+              {tab === 'config' ? '브랜드' : tab === 'programs' ? '사업 영역' : '연혁'}
             </button>
           ))}
         </div>
@@ -239,38 +210,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   </div>
                   <ImageControl label="메인 배경 이미지" imageUrl={config.heroImageUrl} positionValue={config.heroImagePosition} onImageClick={() => fileRefs.hero.current?.click()} onPositionChange={(val: any) => updateConfig('heroImagePosition', val)} />
                   <input type="file" ref={fileRefs.hero} className="hidden" accept="image/*" onChange={(e) => handleImageUpload('heroImageUrl', e)} />
-                </div>
-              </section>
-            </div>
-          )}
-
-          {activeTab === 'ai' && (
-            <div className="space-y-12">
-              <section className="space-y-10">
-                <h3 className="text-xl font-black uppercase tracking-widest border-l-4 border-purple-500 pl-5">Google AI 연결 (연결 거부 해결)</h3>
-                <div className="p-10 bg-white/5 rounded-[2.5rem] border border-white/10 flex flex-col md:flex-row items-center gap-10">
-                  <div className="flex-1 space-y-4">
-                    <div className="flex items-center gap-4">
-                      <div className={`w-4 h-4 rounded-full ${isAiConnected ? 'bg-green-500 shadow-[0_0_15px_rgba(34,197,94,0.5)]' : 'bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.5)]'}`} />
-                      <h4 className="text-2xl font-black uppercase tracking-tight">
-                        {isAiConnected ? 'AI 서비스 활성화됨' : 'AI 서비스 연결 필요'}
-                      </h4>
-                    </div>
-                    <p className="text-gray-400 text-sm leading-relaxed">
-                      "aistudio.google.com에서 연결을 거부했습니다" 메시지가 표시되는 경우, 아래 버튼을 눌러 유료 API 키가 포함된 프로젝트를 선택해야 합니다. 이는 Gemini 3 및 Veo 기능을 활성화하는 필수 단계입니다.
-                    </p>
-                    <div className="pt-4">
-                      <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-purple-400 underline underline-offset-4 hover:text-purple-300 transition-colors">
-                        결제 및 프로젝트 설정 안내 보기
-                      </a>
-                    </div>
-                  </div>
-                  <button 
-                    onClick={handleOpenAiKeySelect}
-                    className="px-10 py-5 rounded-2xl bg-purple-600 text-white text-sm font-black uppercase tracking-widest hover:scale-105 transition-all shadow-2xl active:scale-95 shrink-0"
-                  >
-                    Google AI 키 선택하기
-                  </button>
                 </div>
               </section>
             </div>

@@ -115,6 +115,7 @@ const App: React.FC = () => {
           <Programs programs={programs} primaryColor={config.primaryColor} />
           <RequestForm config={config} />
           <Footer config={config} />
+          {/* Add AI Assistant to home view */}
           <AiAssistant config={config} />
         </main>
       ) : (

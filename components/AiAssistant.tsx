@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { ChatMessage, SiteConfig } from '../types';
 
 interface AiAssistantProps {
@@ -9,12 +9,17 @@ interface AiAssistantProps {
 
 const AiAssistant: React.FC<AiAssistantProps> = ({ config }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'model', text: '안녕하세요! 예술꿈학교 AI 비서입니다. 어떤 도움이 필요하신가요?' }
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Initialize welcome message once
+  useEffect(() => {
+    if (messages.length === 0) {
+      setMessages([{ role: 'model', text: '안녕하세요! 예술꿈학교 AI 비서입니다. 어떤 도움이 필요하신가요?' }]);
+    }
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -25,12 +30,13 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ config }) => {
   const handleSendMessage = async () => {
     if (!input.trim() || isTyping) return;
 
-    const userMessage = { role: 'user' as const, text: input };
+    const userMessage: ChatMessage = { role: 'user', text: input };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsTyping(true);
 
     try {
+      // Create fresh instance per request to ensure latest API key is used
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const chat = ai.chats.create({
         model: 'gemini-3-flash-preview',
@@ -42,31 +48,41 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ config }) => {
         },
       });
 
+      // Stream response from chat
       const result = await chat.sendMessageStream({ message: input });
       
       let fullText = '';
       setMessages(prev => [...prev, { role: 'model', text: '' }]);
 
       for await (const chunk of result) {
-        const text = chunk.text;
-        fullText += text;
-        setMessages(prev => {
-          const updated = [...prev];
-          updated[updated.length - 1] = { role: 'model', text: fullText };
-          return updated;
-        });
+        const c = chunk as GenerateContentResponse;
+        const text = c.text; // Guideline: Use .text property, not .text()
+        if (text) {
+          fullText += text;
+          setMessages(prev => {
+            const updated = [...prev];
+            updated[updated.length - 1] = { role: 'model', text: fullText };
+            return updated;
+          });
+        }
       }
     } catch (error: any) {
       console.error(error);
-      const errorMsg = error.message?.includes('Requested entity was not found')
-        ? "AI 연결 설정이 필요합니다. 관리자 메뉴에서 Google AI를 연결해주세요."
-        : "오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
       
-      setMessages(prev => [...prev, { role: 'model', text: errorMsg }]);
-      
-      // AI Studio 연결 거부 메시지 해결을 위한 자동 팝업 트리거 제안 (관리자 모드 유도)
+      // Handle missing API key or permission errors via AI Studio dialog
       if (error.message?.includes('Requested entity was not found')) {
-        window.alert("AI 서비스 이용을 위해 API 키 선택이 필요합니다. 관리자 모드에서 설정하실 수 있습니다.");
+        const hasKey = (window as any).aistudio?.hasSelectedApiKey ? await (window as any).aistudio.hasSelectedApiKey() : false;
+        if (!hasKey && (window as any).aistudio?.openSelectKey) {
+          if (window.confirm("AI 기능을 사용하려면 API 키 설정이 필요합니다. 설정 창을 여시겠습니까?")) {
+            await (window as any).aistudio.openSelectKey();
+            // Proceed assuming success per guidelines
+            setMessages(prev => [...prev, { role: 'model', text: "API 키가 선택되었습니다. 다시 질문해 주세요." }]);
+          }
+        } else {
+          setMessages(prev => [...prev, { role: 'model', text: "AI 서비스 연결 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요." }]);
+        }
+      } else {
+        setMessages(prev => [...prev, { role: 'model', text: "죄송합니다. 오류가 발생했습니다. 잠시 후 다시 시도해주세요." }]);
       }
     } finally {
       setIsTyping(false);
@@ -122,7 +138,7 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ config }) => {
               <input 
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                 placeholder="궁금한 내용을 물어보세요..."
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 pr-12 text-sm outline-none focus:border-purple-500 transition-all"
               />
@@ -140,6 +156,11 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ config }) => {
           </div>
         </div>
       )}
+
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </div>
   );
 };

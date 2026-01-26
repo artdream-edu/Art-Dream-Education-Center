@@ -21,6 +21,7 @@ export interface HistoryItem {
   event: string;
 }
 
+// Added ChatMessage interface for AI Assistant
 export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
