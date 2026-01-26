@@ -11,7 +11,7 @@ import AdminDashboard from './components/AdminDashboard';
 import AiAssistant from './components/AiAssistant';
 import { Program, SiteConfig, ViewMode, HistoryItem } from './types';
 
-// 시스템 기본 연혁 데이터 (데이터가 없을 때만 사용됨)
+// 시스템 기본 연혁 데이터
 const INITIAL_HISTORY: HistoryItem[] = [
   { id: 'h1', year: '2013', event: '• 예술꿈학교 설립(2013.12.02)\n• 지역아동센터 문화예술교육 프로그램 개발 및 실행\n• 생애주기별 문화예술교육 프로그램 개발 및 실행' },
   { id: 'h2', year: '2014', event: '• 문화예술교육사활용모델발굴지원사업 <숙성공정> / 주관:한국문화예술교육진흥원\n• 찾아가는민주시민토론극 <나... 할말있어> / 주최:경기도교육청\n• 꿈다락토요문화학교 <배우를꿈꾸다> / 주관:한국문화예술교육진흥원\n• 부처간협력문화예술교육(학교밖청소년) <우물쭈물넌참소중해> / 주최:문화체육관광부, 여성가족부' },
@@ -28,14 +28,14 @@ const INITIAL_HISTORY: HistoryItem[] = [
   { id: 'h13', year: '2025', event: '• 인천어린이연극잔치 심사/인천시교육청\n• 서울청소년연극제 심사/서울연극협회\n• 문화예술교육사 현장역량강화사업 컨설팅 및 워크숍/인천문화재단\n• 국립어린이박물관과 함께하는 늘봄학교 프로그램 교육가이드 개발 및 연수/한국문화예술교육진흥원\n• 꿈다락문화예술학교<프로젝트 너머> 기획 및 교육/한국문화예술교육진흥원\n• 청소년 문화예술교육 지원사업 방학일기<청소년 인생설계 프로젝트-플레이 스테이지> 기획 및 교육/제주문화예술재단' }
 ];
 
-// 시스템 기본 사업 영역 데이터
+// 시스템 기본 사업 영역 데이터 (주제별 고화질 예술 이미지)
 const INITIAL_PROGRAMS: Program[] = [
   {
     id: 'p1',
     title: '학교문화예술교육',
     description: '예술과 공교육의 연계. 국가공인 문화예술교육사의 방문 교육을 통해 학생들의 문화적 감수성 및 인성·창의력을 향상시킵니다.',
     category: '공교육 연계',
-    imageUrl: 'https://drive.google.com/uc?export=view&id=19iQyG2taNqrZ7m45bTya0OpLL05hGKzv',
+    imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2000&auto=format&fit=crop',
     imagePosition: 'center'
   },
   {
@@ -43,7 +43,7 @@ const INITIAL_PROGRAMS: Program[] = [
     title: '사회문화예술교육',
     description: '지역아동센터, 노인복지관, 장애인시설 등 소외계층을 대상으로 문화예술의 접근성을 높이고 소통을 지원합니다.',
     category: '지역사회 공헌',
-    imageUrl: 'https://drive.google.com/uc?export=view&id=1TOT7x0L0sYwoW8uZd5dJ_i4Bs_8nh4Ke',
+    imageUrl: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2000&auto=format&fit=crop',
     imagePosition: 'center'
   },
   {
@@ -51,7 +51,7 @@ const INITIAL_PROGRAMS: Program[] = [
     title: '전문인력양성',
     description: '예술강사, 교원, 기업 대상의 온·오프라인 연수 및 문화예술교육사 현장 역량강화 워크숍을 기획합니다.',
     category: '역량 강화',
-    imageUrl: 'https://drive.google.com/uc?export=view&id=1djY1YJUk78BoYhrw6KmgbScV_e3Yssnx',
+    imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2000&auto=format&fit=crop',
     imagePosition: 'center'
   },
   {
@@ -59,7 +59,7 @@ const INITIAL_PROGRAMS: Program[] = [
     title: '출판 & 교육콘텐츠 개발',
     description: '문화예술교육과 관련한 도서 및 교육콘텐츠를 연구, 개발, 보급합니다.',
     category: 'R&D',
-    imageUrl: 'https://drive.google.com/uc?export=view&id=1sxUMnsGPhGnFTqtLkkOLkXKdj4iJoSRf',
+    imageUrl: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=2000&auto=format&fit=crop',
     imagePosition: 'center'
   },
   {
@@ -67,7 +67,7 @@ const INITIAL_PROGRAMS: Program[] = [
     title: '공연기획 및 제작',
     description: '아동청소년극, 시민연극, 참여형 연극, 토크콘서트 등 관객과 긴밀하게 호흡하며 메시지를 전달하는 예술 무대를 제작합니다.',
     category: '공연 제작',
-    imageUrl: 'https://drive.google.com/uc?export=view&id=191o2LkGXBrWKBp-Cliq58RlzN7EjXsBs',
+    imageUrl: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?q=80&w=2000&auto=format&fit=crop',
     imagePosition: 'center'
   },
   {
@@ -75,12 +75,12 @@ const INITIAL_PROGRAMS: Program[] = [
     title: '바이블플레이',
     description: `기독교 가치관을 담은 문화예술교육, 교회학교 교사 워크숍 등 신앙과 예술을 결합한 프로그램을 제공합니다.`,
     category: '기독교 예술교육',
-    imageUrl: 'https://drive.google.com/uc?export=view&id=1zvtyW7JNCOUO0bM0PGXk0Z7IMbUvpkfi',
+    imageUrl: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2000&auto=format&fit=crop',
     imagePosition: 'center'
   }
 ];
 
-// 시스템 기본 설정
+// 시스템 기본 설정 (철학 이미지 포함)
 const INITIAL_CONFIG: SiteConfig = {
   heroTitle: '예술로 꿈꾸는 배움터',
   heroSubtitle: "예술꿈학교는 '문화+예술+교육'을 통해 모든 존재의 고유한 가치를 발견하고 조화롭게 살아가는 것에 대해 함께 고민하며 아름다운 공존을 꿈꾸는 곳입니다.",
@@ -89,7 +89,7 @@ const INITIAL_CONFIG: SiteConfig = {
   logoImageUrl: '',
   logoImagePosition: 'center',
   aboutText: `모든 사람은 태어날 때부터 자신만의 빛깔을 지닌 고유한 예술가입니다. 예술교육은 스스로 세상에 질문을 던지며 내면의 목소리를 발견해 나가는 숭고한 과정입니다. 예술꿈학교는 정형화된 교육의 틀을 깨고, 개인의 예술적 감각이 배움의 동력이 되는 경이로운 순간을 설계합니다. 우리는 모든 이가 자유로운 표현의 주체가 되어 마음껏 상상하고 경험하며, 예술 통해 삶의 깊이를 더해가는 '성장의 놀이터'를 꿈꿉니다.`,
-  aboutImageUrl: 'https://drive.google.com/uc?export=view&id=1A49Dlrwjz9iy6jFOmSROTudJvedzZu4C', 
+  aboutImageUrl: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=2000&auto=format&fit=crop', 
   aboutImagePosition: 'center',
   heroImageUrl: '',
   heroImagePosition: 'center',
@@ -106,41 +106,49 @@ const App: React.FC = () => {
   const [history, setHistory] = useState<HistoryItem[]>(INITIAL_HISTORY);
   const [config, setConfig] = useState<SiteConfig>(INITIAL_CONFIG);
 
-  // 로컬 스토리지 데이터 로드 (컴포넌트 마운트 시 1회 실행)
+  // 로컬 스토리지 데이터 로드 및 오류 이미지 복구
   useEffect(() => {
     const savedPrograms = localStorage.getItem('art_programs');
     const savedConfig = localStorage.getItem('art_config');
     const savedHistory = localStorage.getItem('art_history');
 
+    // 1. 설정 로드
     if (savedConfig) {
       try {
         const parsed = JSON.parse(savedConfig);
-        // 저장된 데이터가 초기 이미지 경로(/images/)를 포함하고 있을 때만 초기값으로 대체하고, 그 외 사용자가 바꾼 모든 값(Base64 포함)은 유지함
-        setConfig(prev => ({
+        setConfig({
           ...INITIAL_CONFIG,
           ...parsed,
-          aboutImageUrl: (parsed.aboutImageUrl && parsed.aboutImageUrl.startsWith('/images/')) ? INITIAL_CONFIG.aboutImageUrl : (parsed.aboutImageUrl || INITIAL_CONFIG.aboutImageUrl),
-          adminPassword: 'dPtnfRna153' // 패스워드는 코드 보안을 위해 고정
-        }));
+          // 이미지가 깨졌거나 비정상적인 경우 기본 고화질 이미지로 교체
+          aboutImageUrl: (!parsed.aboutImageUrl || parsed.aboutImageUrl.includes('error') || parsed.aboutImageUrl.startsWith('/images/')) 
+            ? INITIAL_CONFIG.aboutImageUrl 
+            : parsed.aboutImageUrl,
+          adminPassword: 'dPtnfRna153'
+        });
       } catch (e) {
-        console.error("Config load fail", e);
+        setConfig(INITIAL_CONFIG);
       }
     }
 
+    // 2. 프로그램 로드
     if (savedPrograms) {
       try {
         const parsed = JSON.parse(savedPrograms);
         if (Array.isArray(parsed) && parsed.length > 0) {
           setPrograms(parsed.map((p, idx) => ({
             ...p,
-            imageUrl: (p.imageUrl && p.imageUrl.startsWith('/images/')) ? (INITIAL_PROGRAMS[idx]?.imageUrl || p.imageUrl) : p.imageUrl
+            // 특정 인덱스의 이미지가 오류라면 INITIAL_PROGRAMS에서 가져옴
+            imageUrl: (!p.imageUrl || p.imageUrl.includes('error') || p.imageUrl.startsWith('/images/')) 
+              ? (INITIAL_PROGRAMS[idx]?.imageUrl || p.imageUrl) 
+              : p.imageUrl
           })));
         }
       } catch (e) {
-        console.error("Programs load fail", e);
+        setPrograms(INITIAL_PROGRAMS);
       }
     }
     
+    // 3. 연혁 로드
     if (savedHistory) {
       try {
         const parsed = JSON.parse(savedHistory);
@@ -148,7 +156,7 @@ const App: React.FC = () => {
           setHistory(parsed);
         }
       } catch (e) {
-        console.error("History load fail", e);
+        setHistory(INITIAL_HISTORY);
       }
     }
   }, []);

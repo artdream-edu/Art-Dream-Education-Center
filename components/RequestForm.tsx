@@ -130,10 +130,10 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
   };
 
   const inputClasses = (name: keyof FormErrors) => `
-    w-full bg-white/5 border rounded-2xl px-5 py-4 focus:outline-none transition-all placeholder:text-gray-700 text-sm font-medium
+    w-full bg-white/10 border rounded-2xl px-5 py-4 focus:outline-none transition-all placeholder:text-gray-600 text-sm font-bold text-white
     ${touched[name] && errors[name] 
       ? 'border-red-500/50 focus:border-red-500 ring-1 ring-red-500/20' 
-      : 'border-white/10 focus:border-purple-500'}
+      : 'border-white/20 focus:border-purple-500'}
   `;
 
   return (
@@ -147,10 +147,14 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
           width: 100%;
           height: 100%;
           cursor: pointer;
+          z-index: 20;
         }
         .date-input-container:hover .custom-calendar-icon {
           opacity: 1;
           transform: scale(1.1);
+        }
+        input[type="date"] {
+          color-scheme: dark;
         }
       `}</style>
       <div className="max-w-4xl mx-auto">
@@ -242,14 +246,14 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
                   value={formData.date}
                   onChange={handleChange}
                   onBlur={() => handleBlur('date')}
-                  className={`${inputClasses('date')} pr-14 relative z-10`}
+                  className={`${inputClasses('date')} pr-14 relative z-10 cursor-pointer`}
                 />
                 <div 
-                  className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none transition-all custom-calendar-icon opacity-70 flex items-center gap-2"
+                  className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none transition-all custom-calendar-icon opacity-100 flex items-center justify-center p-2 rounded-lg bg-neutral-800 border border-white/20"
                   style={{ color: config.primaryColor }}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
               </div>
@@ -266,7 +270,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:border-purple-500 transition-all appearance-none cursor-pointer text-sm font-medium"
+                className="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 focus:outline-none focus:border-purple-500 transition-all appearance-none cursor-pointer text-sm font-bold text-white"
               >
                 <option value="학교문화예술교육" className="bg-neutral-900">학교문화예술교육</option>
                 <option value="사회문화예술교육" className="bg-neutral-900">사회문화예술교육</option>
@@ -274,7 +278,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ config }) => {
                 <option value="공연기획제작" className="bg-neutral-900">공연기획 및 제작</option>
                 <option value="바이블플레이" className="bg-neutral-900">바이블플레이</option>
               </select>
-              <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+              <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-white/50">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                 </svg>
