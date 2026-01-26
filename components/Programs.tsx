@@ -27,6 +27,7 @@ const Programs: React.FC<ProgramsProps> = ({ programs, primaryColor }) => {
                   alt={program.title} 
                   className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
                   style={{ objectPosition: program.imagePosition || 'center' }}
+                  referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80"></div>
                 <div className="absolute bottom-6 left-6 right-6">

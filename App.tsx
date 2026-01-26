@@ -108,14 +108,13 @@ const App: React.FC = () => {
     const savedConfig = localStorage.getItem('art_config');
     const savedHistory = localStorage.getItem('art_history');
 
-    // 1. Config 복원 및 구글 드라이브 URL 강제 적용
     if (savedConfig) {
       try {
         const parsedConfig = JSON.parse(savedConfig);
         setConfig({ 
           ...INITIAL_CONFIG, 
           ...parsedConfig,
-          // 저장된 이미지가 구글 드라이브 URL이 아니거나 구형 로컬 경로이면 최신 URL로 강제 덮어쓰기
+          // 로직 보정: 저장된 URL이 drive.google.com을 포함하지 않거나 /images/ 로컬 경로이면 INITIAL_CONFIG의 구글 드라이브 URL로 복구
           aboutImageUrl: (!parsedConfig.aboutImageUrl || !parsedConfig.aboutImageUrl.includes('drive.google.com'))
             ? INITIAL_CONFIG.aboutImageUrl 
             : parsedConfig.aboutImageUrl,
@@ -126,13 +125,12 @@ const App: React.FC = () => {
       }
     }
 
-    // 2. Programs 복원 및 구글 드라이브 URL 강제 적용
     if (savedPrograms) {
       try {
         const parsedPrograms = JSON.parse(savedPrograms);
         setPrograms(parsedPrograms.map((p: Program, idx: number) => ({
           ...p,
-          // 저장된 이미지가 구형이거나 외부 링크인 경우 순서에 맞는 구글 드라이브 URL 강제 매칭
+          // 개별 프로그램의 URL도 검증하여 구글 드라이브가 아니면 초기값 매칭
           imageUrl: (!p.imageUrl || !p.imageUrl.includes('drive.google.com'))
             ? (INITIAL_PROGRAMS[idx]?.imageUrl || p.imageUrl)
             : p.imageUrl
@@ -145,7 +143,6 @@ const App: React.FC = () => {
       setPrograms(INITIAL_PROGRAMS);
     }
     
-    // 3. History 복원
     if (savedHistory) {
       try {
         const parsedHistory = JSON.parse(savedHistory);

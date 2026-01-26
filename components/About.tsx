@@ -29,6 +29,7 @@ const About: React.FC<AboutProps> = ({ config }) => {
               alt="예술 교육 철학" 
               className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 ease-in-out"
               style={{ objectPosition: config.aboutImagePosition || 'center' }}
+              referrerPolicy="no-referrer"
             />
           </div>
           <div className="absolute -bottom-6 -left-6 md:-bottom-8 md:-left-8 glass p-6 md:p-8 rounded-3xl max-w-xs border-l-4" style={{ borderColor: config.primaryColor }}>

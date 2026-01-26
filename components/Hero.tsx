@@ -17,6 +17,7 @@ const Hero: React.FC<HeroProps> = ({ config }) => {
             className="w-full h-full object-cover opacity-40 grayscale"
             style={{ objectPosition: config.heroImagePosition || 'center' }}
             alt="Hero Background"
+            referrerPolicy="no-referrer"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black via-black/40 to-black"></div>
         </div>

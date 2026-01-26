@@ -49,6 +49,7 @@ const Navbar: React.FC<NavbarProps> = ({ config, viewMode, setViewMode }) => {
                 alt={config.logoName} 
                 className="h-8 md:h-10 w-auto object-contain transition-transform group-hover:scale-105"
                 style={{ objectPosition: config.logoImagePosition || 'center' }}
+                referrerPolicy="no-referrer"
               />
             ) : (
               <div className="text-xl md:text-2xl font-black tracking-tighter">

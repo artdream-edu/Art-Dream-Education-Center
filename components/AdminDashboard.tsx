@@ -116,7 +116,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       <div className="flex flex-col md:flex-row gap-8">
         <div className={`w-full md:w-64 ${aspect} rounded-2xl overflow-hidden border border-white/10 bg-neutral-900 group cursor-pointer relative shadow-2xl`} onClick={onImageClick}>
           {imageUrl ? (
-            <img src={imageUrl} className="w-full h-full object-cover transition-opacity group-hover:opacity-40" style={{ objectPosition: positionValue || 'center' }} alt="Preview" />
+            <img src={imageUrl} className="w-full h-full object-cover transition-opacity group-hover:opacity-40" style={{ objectPosition: positionValue || 'center' }} alt="Preview" referrerPolicy="no-referrer" />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-700 text-[10px] font-bold uppercase tracking-widest">No Image</div>
           )}
