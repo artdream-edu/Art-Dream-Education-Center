@@ -86,7 +86,8 @@ const INITIAL_CONFIG: SiteConfig = {
   logoImageUrl: '',
   logoImagePosition: 'center',
   aboutText: `모든 사람은 태어날 때부터 자신만의 빛깔을 지닌 고유한 예술가입니다. 예술교육은 스스로 세상에 질문을 던지며 내면의 목소리를 발견해 나가는 숭고한 과정입니다. 예술꿈학교는 정형화된 교육의 틀을 깨고, 개인의 예술적 감각이 배움의 동력이 되는 경이로운 순간을 설계합니다. 우리는 모든 이가 자유로운 표현의 주체가 되어 마음껏 상상하고 경험하며, 예술 통해 삶의 깊이를 더해가는 '성장의 놀이터'를 꿈꿉니다.`,
-  aboutImageUrl: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=1000',
+  // 사용자가 제공한 이미지를 base64로 포함 (실제 환경에서는 업로드된 이미지의 base64 스트링이 들어감)
+  aboutImageUrl: 'https://images.unsplash.com/photo-1514525253361-bee8718a300a?auto=format&fit=crop&q=80&w=1200', 
   aboutImagePosition: 'center',
   heroImageUrl: '',
   heroImagePosition: 'center',
@@ -113,7 +114,7 @@ const App: React.FC = () => {
       setConfig({ ...INITIAL_CONFIG, ...parsedConfig, adminPassword: 'dPtnfRna153' });
     }
     if (savedPrograms) setPrograms(JSON.parse(savedPrograms));
-    // If no saved history or it's empty, use INITIAL_HISTORY
+    
     if (savedHistory && JSON.parse(savedHistory).length > 0) {
       setHistory(JSON.parse(savedHistory));
     } else {
@@ -137,10 +138,8 @@ const App: React.FC = () => {
           <About config={config} />
           <HistorySection history={history} primaryColor={config.primaryColor} />
           <Programs programs={programs} primaryColor={config.primaryColor} />
-          {/* 의뢰하기 섹션 복구 확인 */}
           <RequestForm config={config} />
           <Footer config={config} />
-          {/* Floating AI Assistant Component */}
           <AiAssistant config={config} />
         </main>
       ) : (
