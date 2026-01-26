@@ -74,7 +74,7 @@ const INITIAL_CONFIG: SiteConfig = {
   aboutImagePosition: 'center',
   heroImageUrl: '',
   heroImagePosition: 'center',
-  adminPassword: '000000',
+  adminPassword: 'dPtnfRna153',
   footerAddress: '경기도 하남시 미사강변한강로 135, 다동 9층 938호 (미사강변 스카이폴리스)',
   instagramUrl: 'https://www.instagram.com/artdream_edu',
   youtubeUrl: 'https://youtube.com/@artdream_edu',
