@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -80,7 +81,7 @@ const INITIAL_PROGRAMS: Program[] = [
 const NATURE_KIDS_IMAGE = "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?q=80&w=2000&auto=format&fit=crop";
 
 const INITIAL_CONFIG: SiteConfig = {
-  heroTitle: '예술로 꿈꾸는 배움터',
+  heroTitle: '예술로\n꿈꾸는 배움터',
   heroSubtitle: "예술꿈학교는 '문화+예술+교육'을 통해 모든 존재의 고유한 가치를 발견하고 조화롭게 살아가는 것에 대해 함께 고민하며 아름다운 공존을 꿈꾸는 곳입니다.",
   primaryColor: '#8B5CF6',
   logoName: '예술꿈학교',
