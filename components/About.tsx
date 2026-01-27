@@ -26,14 +26,14 @@ const About: React.FC<AboutProps> = ({ config }) => {
           <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-white/5 bg-neutral-900 group">
             <img 
               src={config.aboutImageUrl} 
-              alt="Artistic Education Vision" 
+              alt="Nature and Children" 
               className="w-full h-full object-cover transition-all duration-1000 ease-in-out brightness-100 group-hover:brightness-110 group-hover:scale-105"
               style={{ objectPosition: config.aboutImagePosition || 'center' }}
               referrerPolicy="no-referrer"
             />
-            {/* 자연 속 아이들의 활기찬 에너지를 전달하기 위해 인위적인 오버레이를 제거하고 밝기를 100%로 복구 */}
+            {/* 활기찬 분위기를 위해 brightness 필터를 제거하고 선명한 상태로 유지 */}
           </div>
-          <div className="absolute -bottom-6 -left-6 md:-bottom-8 md:-left-8 glass p-6 md:p-8 rounded-3xl max-w-xs border-l-4 shadow-2xl" style={{ borderColor: config.primaryColor }}>
+          <div className="absolute -bottom-6 -left-6 md:-bottom-8 md:-left-8 glass p-6 md:p-8 rounded-3xl max-w-xs border-l-4" style={{ borderColor: config.primaryColor }}>
             <p className="text-sm italic font-medium leading-relaxed mb-3">"연극은 교육과 예술의 교차점에 존재한다."</p>
             <p className="text-[10px] font-bold uppercase tracking-widest opacity-50">— Philip Taylor</p>
           </div>

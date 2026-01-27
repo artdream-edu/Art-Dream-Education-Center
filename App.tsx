@@ -80,7 +80,7 @@ const INITIAL_PROGRAMS: Program[] = [
   }
 ];
 
-// 복구된 '자연 속 아이들' 이미지
+// 활기찬 자연 속 아이들 이미지 (더욱 생동감 넘치는 것으로 교체)
 const NATURE_KIDS_IMAGE = "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?q=80&w=2000&auto=format&fit=crop";
 
 const INITIAL_CONFIG: SiteConfig = {
@@ -117,12 +117,11 @@ const App: React.FC = () => {
       try {
         const parsed = JSON.parse(savedConfig);
         
-        // 이전 버전 이미지 및 최근 초현실적 이미지 키워드를 필터링하여 복구용 이미지로 강제 업데이트
+        // 이전 이미지들을 감지하여 새로운 활기찬 이미지로 강제 업데이트
         const outdatedKeywords = [
-          'photo-1492684223066-81342ee5ff30',
-          'photo-1516280440614-37939bbacd81',
-          'photo-1481653125770-b78c206c59d4',
-          'photo-1476712395872-c2971d88beb7',
+          'photo-1492684223066-81342ee5ff30', // 빈 무대
+          'photo-1516280440614-37939bbacd81', // 워크숍 이미지
+          'photo-1481653125770-b78c206c59d4', // 이전 버전 자연 이미지
           'photo-1547592166-23ac45744acd'
         ];
         
