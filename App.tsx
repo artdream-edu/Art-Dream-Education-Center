@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -27,7 +26,6 @@ const INITIAL_HISTORY: HistoryItem[] = [
   { id: 'h13', year: '2025', event: '• 인천어린이연극잔치 심사/인천시교육청\n• 서울청소년연극제 심사/서울연극협회\n• 문화예술교육사 현장역량강화사업 컨설팅 및 워크숍/인천문화재단\n• 국립어린이박물관과 함께하는 늘봄학교 프로그램 교육가이드 개발 및 연수/한국문화예술교육진흥원\n• 꿈다락문화예술학교<프로젝트 너머> 기획 및 교육/한국문화예술교육진흥원\n• 청소년 문화예술교육 지원사업 방학일기<청소년 인생설계 프로젝트-플레이 스테이지> 기획 및 교육/제주문화예술재단' }
 ];
 
-// 시스템 기본 사업 영역 데이터
 const INITIAL_PROGRAMS: Program[] = [
   {
     id: 'p1',
@@ -79,7 +77,6 @@ const INITIAL_PROGRAMS: Program[] = [
   }
 ];
 
-// 활기찬 자연 속 아이들 이미지 (더욱 생동감 넘치는 것으로 교체)
 const NATURE_KIDS_IMAGE = "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?q=80&w=2000&auto=format&fit=crop";
 
 const INITIAL_CONFIG: SiteConfig = {
@@ -115,23 +112,9 @@ const App: React.FC = () => {
     if (savedConfig) {
       try {
         const parsed = JSON.parse(savedConfig);
-        
-        // 이전 이미지들을 감지하여 새로운 활기찬 이미지로 강제 업데이트
-        const outdatedKeywords = [
-          'photo-1492684223066-81342ee5ff30', // 빈 무대
-          'photo-1516280440614-37939bbacd81', // 워크숍 이미지
-          'photo-1481653125770-b78c206c59d4', // 이전 버전 자연 이미지
-          'photo-1547592166-23ac45744acd'
-        ];
-        
-        const needsUpdate = !parsed.aboutImageUrl || 
-                            parsed.aboutImageUrl.includes('error') || 
-                            outdatedKeywords.some(kw => parsed.aboutImageUrl.includes(kw));
-
         setConfig({
           ...INITIAL_CONFIG,
           ...parsed,
-          aboutImageUrl: needsUpdate ? INITIAL_CONFIG.aboutImageUrl : parsed.aboutImageUrl,
           adminPassword: 'dPtnfRna153'
         });
       } catch (e) {
@@ -143,12 +126,9 @@ const App: React.FC = () => {
       try {
         const parsed = JSON.parse(savedPrograms);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setPrograms(parsed.map((p, idx) => ({
-            ...p,
-            imageUrl: (!p.imageUrl || p.imageUrl.includes('error')) 
-              ? (INITIAL_PROGRAMS[idx]?.imageUrl || p.imageUrl) 
-              : p.imageUrl
-          })));
+          setPrograms(parsed);
+        } else {
+          setPrograms(INITIAL_PROGRAMS);
         }
       } catch (e) {
         setPrograms(INITIAL_PROGRAMS);
@@ -160,6 +140,8 @@ const App: React.FC = () => {
         const parsed = JSON.parse(savedHistory);
         if (Array.isArray(parsed) && parsed.length > 0) {
           setHistory(parsed);
+        } else {
+          setHistory(INITIAL_HISTORY);
         }
       } catch (e) {
         setHistory(INITIAL_HISTORY);

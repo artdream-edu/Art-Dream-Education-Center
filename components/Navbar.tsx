@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { ViewMode, SiteConfig } from '../types';
 
 interface NavbarProps {
@@ -9,16 +8,42 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ config, viewMode, setViewMode }) => {
-  const handleAdminClick = (e: React.MouseEvent) => {
+  const [clickCount, setClickCount] = useState(0);
+  const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    const password = window.prompt('관리자 비밀번호를 입력해주세요.');
-    const correctPassword = config.adminPassword || '000000';
     
-    if (password === correctPassword) {
-      setViewMode('admin');
+    // 이미 관리자 모드라면 홈으로 이동
+    if (viewMode === 'admin') {
+      setViewMode('home');
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (password !== null) {
-      alert('비밀번호가 올바르지 않습니다.');
+      return;
+    }
+
+    // 클릭 횟수 카운트 (3초 내 5회 클릭)
+    const newCount = clickCount + 1;
+    setClickCount(newCount);
+
+    if (clickTimer.current) clearTimeout(clickTimer.current);
+    clickTimer.current = setTimeout(() => {
+      setClickCount(0);
+    }, 3000);
+
+    // 5번 클릭 시 관리자 인증
+    if (newCount >= 5) {
+      setClickCount(0);
+      if (clickTimer.current) clearTimeout(clickTimer.current);
+      
+      const password = window.prompt('관리자 비밀번호를 입력해주세요.');
+      const correctPassword = config.adminPassword || 'dPtnfRna153';
+      
+      if (password === correctPassword) {
+        setViewMode('admin');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (password !== null) {
+        alert('비밀번호가 올바르지 않습니다.');
+      }
     }
   };
 
@@ -32,16 +57,13 @@ const Navbar: React.FC<NavbarProps> = ({ config, viewMode, setViewMode }) => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-[100] glass border-b border-white/10 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 md:px-12">
-        {/* Desktop & Tablet Layout */}
         <div className="flex flex-col md:flex-row items-center justify-between py-4 md:h-20 gap-4 md:gap-0">
           
-          {/* Logo */}
+          {/* Logo with Hidden Admin Trigger */}
           <div 
-            className="flex items-center gap-3 cursor-pointer group"
-            onClick={() => {
-              setViewMode('home');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+            className="flex items-center gap-3 cursor-pointer group select-none"
+            onClick={handleLogoClick}
+            title={viewMode === 'admin' ? "홈으로 돌아가기" : ""}
           >
             {config.logoImageUrl ? (
               <img 
@@ -59,13 +81,13 @@ const Navbar: React.FC<NavbarProps> = ({ config, viewMode, setViewMode }) => {
             )}
           </div>
 
-          {/* Navigation Links - Always Visible */}
-          <div className="flex items-center justify-center gap-4 md:gap-10 overflow-x-auto no-scrollbar w-full md:w-auto pb-2 md:pb-0">
+          {/* Navigation Links */}
+          <div className="flex items-center justify-center gap-6 md:gap-10 overflow-x-auto no-scrollbar w-full md:w-auto pb-2 md:pb-0">
             {navLinks.map((link) => (
               <a 
                 key={link.name} 
                 href={link.href} 
-                className="text-[11px] md:text-sm font-bold text-gray-400 hover:text-white transition-all whitespace-nowrap tracking-tighter md:tracking-normal relative group py-1"
+                className="text-[11px] md:text-sm font-bold text-gray-400 hover:text-white transition-all whitespace-nowrap tracking-widest relative group py-1 uppercase"
               >
                 {link.name}
                 <span 
@@ -76,9 +98,9 @@ const Navbar: React.FC<NavbarProps> = ({ config, viewMode, setViewMode }) => {
             ))}
           </div>
           
-          {/* Action Button */}
-          <div className="flex items-center shrink-0">
-            {viewMode === 'admin' ? (
+          {/* Action Area (Admin exit only) */}
+          <div className="flex items-center shrink-0 min-w-[100px] justify-end">
+            {viewMode === 'admin' && (
               <button 
                 onClick={() => {
                   setViewMode('home');
@@ -86,14 +108,7 @@ const Navbar: React.FC<NavbarProps> = ({ config, viewMode, setViewMode }) => {
                 }}
                 className="px-4 md:px-6 py-2 rounded-full bg-white text-black text-[9px] md:text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all shadow-xl"
               >
-                사이트 보기
-              </button>
-            ) : (
-              <button 
-                onClick={handleAdminClick}
-                className="px-4 md:px-6 py-2 rounded-full bg-white/10 border border-white/20 text-[9px] md:text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all text-white shadow-lg active:scale-95"
-              >
-                관리자
+                편집 종료
               </button>
             )}
           </div>
