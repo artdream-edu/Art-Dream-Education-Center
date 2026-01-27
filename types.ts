@@ -21,6 +21,12 @@ export interface HistoryItem {
   event: string;
 }
 
+// Added ChatMessage interface to fix "Module '"../types"' has no exported member 'ChatMessage'" error
+export interface ChatMessage {
+  role: 'user' | 'model';
+  text: string;
+}
+
 export interface SiteConfig {
   heroTitle: string;
   heroSubtitle: string;
@@ -41,9 +47,3 @@ export interface SiteConfig {
 }
 
 export type ViewMode = 'home' | 'admin';
-
-// Added to fix "Module '"../types"' has no exported member 'ChatMessage'"
-export interface ChatMessage {
-  role: 'user' | 'model';
-  text: string;
-}

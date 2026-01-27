@@ -8,7 +8,6 @@ import HistorySection from './components/HistorySection';
 import RequestForm from './components/RequestForm';
 import Footer from './components/Footer';
 import AdminDashboard from './components/AdminDashboard';
-import AiAssistant from './components/AiAssistant';
 import { Program, SiteConfig, ViewMode, HistoryItem } from './types';
 
 // 시스템 기본 연혁 데이터
@@ -186,7 +185,6 @@ const App: React.FC = () => {
           <Programs programs={programs} primaryColor={config.primaryColor} />
           <RequestForm config={config} />
           <Footer config={config} />
-          <AiAssistant config={config} />
         </main>
       ) : (
         <div className="animate-in fade-in duration-500">
