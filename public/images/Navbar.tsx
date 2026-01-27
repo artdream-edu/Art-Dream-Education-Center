@@ -26,14 +26,18 @@ const Navbar: React.FC<NavbarProps> = ({ config, viewMode, setViewMode }) => {
   };
 
   const handleLogoClick = () => {
+    // 5번 연속 클릭 시 관리자 모드 진입 (숨겨진 기능)
     const newCount = logoClickCount + 1;
     setLogoClickCount(newCount);
     
     if (newCount >= 5) {
       handleAdminAccess();
     } else {
+      // 일반적인 로고 클릭 기능: 홈으로 이동
       setViewMode('home');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // 3초 후 클릭 카운트 초기화 (연속 클릭 방지)
       setTimeout(() => setLogoClickCount(0), 3000);
     }
   };
@@ -50,6 +54,7 @@ const Navbar: React.FC<NavbarProps> = ({ config, viewMode, setViewMode }) => {
       <div className="max-w-7xl mx-auto px-4 md:px-12">
         <div className="flex flex-col md:flex-row items-center justify-between py-4 md:h-20 gap-4 md:gap-0">
           
+          {/* Logo - Hidden Admin Entry via 5 Clicks */}
           <div 
             className="flex items-center gap-3 cursor-pointer group select-none"
             onClick={handleLogoClick}
@@ -70,6 +75,7 @@ const Navbar: React.FC<NavbarProps> = ({ config, viewMode, setViewMode }) => {
             )}
           </div>
 
+          {/* Navigation Links */}
           <div className="flex items-center justify-center gap-4 md:gap-10 overflow-x-auto no-scrollbar w-full md:w-auto pb-2 md:pb-0">
             {navLinks.map((link) => (
               <a 
@@ -86,9 +92,20 @@ const Navbar: React.FC<NavbarProps> = ({ config, viewMode, setViewMode }) => {
             ))}
           </div>
           
+          {/* Action Button removed for cleaner UI */}
           <div className="hidden md:block w-20"></div> 
         </div>
       </div>
+
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </nav>
   );
 };

@@ -8,7 +8,6 @@ import HistorySection from './components/HistorySection';
 import RequestForm from './components/RequestForm';
 import Footer from './components/Footer';
 import AdminDashboard from './components/AdminDashboard';
-import AiAssistant from './components/AiAssistant';
 import { Program, SiteConfig, ViewMode, HistoryItem } from './types';
 
 // 시스템 기본 연혁 데이터
@@ -80,7 +79,7 @@ const INITIAL_PROGRAMS: Program[] = [
   }
 ];
 
-// 복구된 '자연 속 아이들' 이미지
+// 이전의 '자연 속 아이들' 이미지로 복구
 const NATURE_KIDS_IMAGE = "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?q=80&w=2000&auto=format&fit=crop";
 
 const INITIAL_CONFIG: SiteConfig = {
@@ -122,7 +121,7 @@ const App: React.FC = () => {
           'photo-1492684223066-81342ee5ff30',
           'photo-1516280440614-37939bbacd81',
           'photo-1481653125770-b78c206c59d4',
-          'photo-1476712395872-c2971d88beb7',
+          'photo-1476712395872-c2971d88beb7', // 방금 전 적용했던 초현실 정원 이미지
           'photo-1547592166-23ac45744acd'
         ];
         
@@ -187,7 +186,6 @@ const App: React.FC = () => {
           <Programs programs={programs} primaryColor={config.primaryColor} />
           <RequestForm config={config} />
           <Footer config={config} />
-          <AiAssistant config={config} />
         </main>
       ) : (
         <div className="animate-in fade-in duration-500">
