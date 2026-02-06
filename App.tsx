@@ -165,7 +165,7 @@ const App: React.FC = () => {
           <Hero config={config} />
           <About config={config} />
           <HistorySection history={history} primaryColor={config.primaryColor} />
-          <Programs programs={programs} primaryColor={config.primaryColor} />
+          <Programs programs={programs} primaryColor={config.primaryColor} blogUrl={config.blogUrl} />
           <RequestForm config={config} />
           <Footer config={config} />
         </main>

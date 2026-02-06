@@ -5,9 +5,10 @@ import { Program } from '../types';
 interface ProgramsProps {
   programs: Program[];
   primaryColor: string;
+  blogUrl?: string;
 }
 
-const Programs: React.FC<ProgramsProps> = ({ programs, primaryColor }) => {
+const Programs: React.FC<ProgramsProps> = ({ programs, primaryColor, blogUrl = 'https://blog.naver.com/artdream_official' }) => {
   return (
     <section id="programs" className="py-24 px-6 md:px-12 bg-black">
       <div className="max-w-7xl mx-auto">
@@ -21,22 +22,30 @@ const Programs: React.FC<ProgramsProps> = ({ programs, primaryColor }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {programs.map((program) => (
             <div key={program.id} className="group relative">
-              <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-neutral-900 border border-white/5 transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_-15px_rgba(139,92,246,0.3)]">
-                <img 
-                  src={program.imageUrl} 
-                  alt={program.title} 
-                  className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
-                  style={{ objectPosition: program.imagePosition || 'center' }}
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80"></div>
-                <div className="absolute bottom-6 left-6 right-6">
-                  <span className="inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-3 bg-white/10 backdrop-blur-md" style={{ color: primaryColor }}>
-                    {program.category}
-                  </span>
-                  <h4 className="text-2xl font-bold text-white transition-colors">{program.title}</h4>
+              <a 
+                href={blogUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="block cursor-pointer"
+                title="상세 내용 보러가기 (블로그)"
+              >
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-neutral-900 border border-white/5 transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_-15px_rgba(139,92,246,0.3)]">
+                  <img 
+                    src={program.imageUrl} 
+                    alt={program.title} 
+                    className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110"
+                    style={{ objectPosition: program.imagePosition || 'center' }}
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80"></div>
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <span className="inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-3 bg-white/10 backdrop-blur-md" style={{ color: primaryColor }}>
+                      {program.category}
+                    </span>
+                    <h4 className="text-2xl font-bold text-white transition-colors">{program.title}</h4>
+                  </div>
                 </div>
-              </div>
+              </a>
               <p className="text-gray-400 leading-relaxed px-1">{program.description}</p>
             </div>
           ))}
