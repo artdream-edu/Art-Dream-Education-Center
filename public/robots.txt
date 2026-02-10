@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://www.artdream.kr/sitemap.xml
+Sitemap: https://artdream.kr/sitemap.xml
+Sitemap: https://artdream.kr/rss.xml
