@@ -3,5 +3,6 @@
   "description": "문화예술교육 전문 단체 예술꿈학교의 공식 웹사이트입니다. ",
   "requestFramePermissions": [
     "camera"
-  ]
+  ],
+  "majorCapabilities": []
 }
